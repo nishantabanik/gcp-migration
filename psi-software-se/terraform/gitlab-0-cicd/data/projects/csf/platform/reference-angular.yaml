@@ -1,0 +1,4 @@
+unique_id: csf-incubator-reference-angular
+description: reference-angular
+merge_pipelines_enabled: true
+merge_trains_enabled: true

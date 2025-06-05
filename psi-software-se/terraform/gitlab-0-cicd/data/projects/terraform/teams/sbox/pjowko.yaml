@@ -1,0 +1,12 @@
+unique_id: SBOXPJOWKOD3L9XQ6
+description: Project for pjowko developer
+approvals_required: 0
+
+access_tokens:
+  - name: push-token
+    variable_name: GITLAB_PUSH_TOKEN
+    description: Pjowko test access token for GitLab
+    access_level: maintainer
+    protected: true
+    scopes:
+      - write_repository

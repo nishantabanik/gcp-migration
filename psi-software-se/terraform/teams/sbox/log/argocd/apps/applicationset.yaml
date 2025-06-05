@@ -1,0 +1,73 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: argocd-apps
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=zero"]
+  generators:
+    - git:
+        repoURL: "git@gitlab.com:psi-software-se/terraform/teams/wms.git"
+        revision: "HEAD"
+        files:
+          - path: "infrastructure/terraform/wms-tool-0/argocd/apps/**/application.yaml"
+  template:
+    metadata:
+      namespace: "argocd"
+      annotations:
+        notifications.argoproj.io/subscribe.on-fixed.gitlab: ""
+        notifications.argoproj.io/subscribe.on-sync-failed.gitlab: ""
+        notifications.argoproj.io/subscribe.on-progressing.gitlab: ""
+    spec:
+      project: "default"
+      source:
+        repoURL: ""
+        targetRevision: ""
+      destination:
+        server: "https://kubernetes.default.svc"
+        namespace: "{{.path.basename }}"
+  templatePatch: |
+      metadata:
+        name: "{{.path.basename }}"
+      {{- if .metadata.finalizers }}
+        finalizers:
+        {{- .metadata.finalizers | toYaml | nindent 4 }}
+      {{- end }}
+      {{- if .metadata.annotations }}
+        annotations:
+        {{- .metadata.annotations | toYaml | nindent 4 }}
+      {{- end }}
+      {{- if .metadata.labels }}
+        labels:
+        {{- .metadata.labels | toYaml | nindent 4 }}
+      {{- end }}
+      spec:
+      {{- if .spec.source }}
+        source:
+        {{- .spec.source | toYaml | nindent 4 }}
+      {{- end }}
+      {{- if .spec.sources }}
+        sources:
+        {{- .spec.sources | toYaml | nindent 4 }}
+      {{- end }}
+      {{- if .spec.destination }}
+        destination:
+        {{- .spec.destination | toYaml | nindent 4 }}
+      {{- end }}
+      {{- if .spec.info }}
+        info:
+        {{- .spec.info | toYaml | nindent 4 }}
+      {{- end }}
+      {{- if .spec.syncPolicy }}
+        syncPolicy:
+        {{- .spec.syncPolicy | toYaml | nindent 4 }}
+      {{- end }}
+      {{- if .spec.ignoreDifferences }}
+        ignoreDifferences:
+        {{- .spec.ignoreDifferences | toYaml | nindent 4 }}
+      {{- end }}
+      {{- if .spec.revisionHistoryLimit }}
+        revisionHistoryLimit:
+        {{- .spec.revisionHistoryLimit | nindent 4 }}
+      {{- end }}

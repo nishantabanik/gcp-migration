@@ -1,0 +1,4 @@
+unique_id: mes-product-mes-application-calendar-application
+description: calendar-application
+merge_pipelines_enabled: true
+merge_trains_enabled: false

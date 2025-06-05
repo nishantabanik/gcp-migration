@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row row-cols-1 row-cols-md-2 g-4">
+    <div class="col">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Kubernetes Cluster</h5>
+                <p class="card-text">Manage your Kubernetes clusters efficiently.</p>
+                <a href="{{ url_for('kubernetes') }}" class="btn btn-primary btn-psi-blue">Manage</a>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">VM</h5>
+                <p class="card-text">Manage your virtual machines with ease.</p>
+                <a href="{{ url_for('vm') }}" class="btn btn-primary btn-psi-blue">Manage</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="detail-view" class="mt-4"></div>
+{% endblock %}

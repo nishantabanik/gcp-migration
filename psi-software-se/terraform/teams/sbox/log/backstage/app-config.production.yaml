@@ -1,0 +1,39 @@
+backend:
+    database:
+      client: pg
+      connection:
+        host: ${POSTGRES_HOST}
+        port: ${POSTGRES_PORT}
+        user: ${POSTGRES_USER}
+        password: ${POSTGRES_PASSWORD}
+catalog:
+  providers:
+    keycloakOrg:
+      default:
+        baseUrl: ${AUTH_BASE_URL}
+        loginRealm: ${AUTH_REALM}
+        realm: ${AUTH_REALM}
+        clientId: ${BACKSTAGE_CLIENT_ID}
+        clientSecret: ${BACKSTAGE_CLIENT_SECRET}
+        schedule:
+          frequency: { minutes: 1 }
+          timeout: { minutes: 3 }
+auth:
+  environment: production
+  session:
+    secret: ${BACKSTAGE_SESSION_SECRET}
+  providers:
+    keycloak:
+      production:
+        metadataUrl: ${AUTH_METADA_URL}
+        clientId: ${BACKSTAGE_CLIENT_ID}
+        clientSecret: ${BACKSTAGE_CLIENT_SECRET}
+        prompt: auto
+cors:
+  origin: "${BACKSTAGE_HOST}"
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+  credentials: true
+proxy:
+  '/api/catalog':
+    target: "${BACKSTAGE_HOST}"
+    changeOrigin: true

@@ -1,0 +1,106 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: create-wms-server-config
+  title: WMS Server Config Template
+  description: Creates a YAML configuration file and pushes it to a GitLab repository.
+  annotations:
+    backstage.io/techdocs-entity: component:default/how-to-use-wms-server-config-template
+
+spec:
+  owner: user:guest
+  type: service
+  consumesApis: ['component:wms-server-config-template']
+  parameters:
+    - title: Server Configuration
+      properties:
+        serverName:
+          title: Server Name
+          description: Name of the server (e.g., "wms-server-host-test").
+          type: string
+          pattern: "^(?!.*-$)[a-z0-9-]+$"
+          errorMessage:
+            pattern: "The server name can only contain lowercase letters, numbers, underscores, and hyphens, and must not end with a period or hyphen."
+        size:
+          title: Server Size
+          description: Size of the server (e.g., "small", "medium", "large").
+          type: string
+          enum:
+            - small
+            - medium
+            - large
+        enableSsh:
+          title: Enable SSH
+          description: Whether SSH should be enabled.
+          type: boolean
+          default: true
+        initScript:
+          title: Initialization Script
+          description: Bash script to initialize the server (default provided).
+          type: string
+          ui:widget: textarea
+          default: |
+            #!/bin/bash
+            export APP_ENV=testing
+            export DEBUG="false"
+            sudo apt-get update -y
+            sudo apt-get install -y nginx curl htop
+    - title: Choose a location
+      required:
+        - repoUrl
+      properties:
+        repoUrl:
+          title: Repository Location
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - gitlab.com
+            projectPath: true
+
+  steps:
+    - id: generate-config
+      name: Generate Configuration File
+      action: fetch:template
+      input:
+        url: ./skeleton
+        values:
+          serverName: ${{ parameters.serverName }}
+          size: ${{ parameters.size }}
+          enableSsh: ${{ parameters.enableSsh }}
+          initScript: ${{ parameters.initScript | indent(4) }}
+          repoUrl: ${{ parameters.repoUrl }}
+      
+    - id: renameFiles
+      action: fs:rename
+      name: Rename files
+      input:
+        files:
+          - from: wms-server-config.yaml
+            to: ${{ parameters.serverName }}-config.yaml
+            overwrite: true
+          - from: catalog-info.yaml
+            to: catalog-${{ parameters.serverName }}.yaml
+
+    - id: pushChanges
+      action: gitlab:repo:push
+      name: Push changes to gitlab repository
+      input:
+        repoUrl: ${{ parameters.repoUrl }}
+        commitMessage: Auto-Commit from Backstage for ${{ parameters.serverName }}
+        branchName: main
+        sourcePath: ./
+        targetPath: ./deploy/templates
+
+    - id: registerComponent
+      name: Register Component in Backstage
+      action: catalog:register
+      input:
+        repoContentsUrl: "https://gitlab.com/${{ steps['pushChanges'].output.projectPath }}/-/blob/main/"
+        catalogInfoPath: 'deploy/templates/catalog-${{ parameters.serverName }}.yaml'
+
+  # Outputs are displayed to the user after a successful execution of the template.
+  output:
+    links:
+      - title: View in Backstage
+        entityRef: ${{ steps['registerComponent'].output.entityRef }}

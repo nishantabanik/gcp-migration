@@ -1,0 +1,6 @@
+unique_id: sbox-lfrankowski
+description: Project for lfrankowski
+approvals_required: 0
+access_groups:
+  organization/csf/app-gcp-sbox-csf-admins: developer
+  organization/csf/app-gcp-sbox-csf: reporter

@@ -1,0 +1,9 @@
+name: Legacy
+description: Repositories for legacy cloud setups
+access_groups:
+  organization/leg-ibm/app-gcp-legacy-ibm-gem-admin: developer
+  organization/leg-ibm/app-gcp-legacy-ibm-pem-admin: developer
+  organization/leg-ibm/app-gcp-legacy-ibm-cf-fin-admin: developer
+  organization/leg-ibm/app-gcp-legacy-ibm-cf-iai-admin: developer
+  organization/leg-ibm/app-gcp-legacy-ibm-cf-its-admin: developer
+  organization/leg-ibm/app-gcp-legacy-ibm-cf-tech-admin: developer

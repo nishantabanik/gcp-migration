@@ -1,0 +1,53 @@
+# "cf-fin/prod-int" = "folders/699932504112"
+folder_id: folders/699932504112
+
+# [opt] Contacts for billing alerts and important notifications - merged with the ones defined in defaults
+essential_contacts:
+  - jbandow@psi.de
+  - sabinekoldewey@psi.de
+
+# [opt] CICD config for WIF and service account. GitLab project name specified as evidanza can be created afterwards.
+cicd:
+  repository: psi-software-se/terraform/teams/ibm/cf-fin/prod-int/evidanza
+  sa_roles:
+    - roles/editor
+
+# Projects should define mandatory labels (environment, owner, creator, team)
+labels:
+  environment: development
+  owner: gcp-team-its
+  creator: pjowko
+  team: cf-fin
+  application: ibm-cfo-evidanza-prd
+
+# [opt] Service account to create for the project and their roles on the project
+# in name => [roles] format
+#service_accounts:
+
+# [opt] Authoritative IAM bindings in group => [roles] format
+#         Overview of all roles: https://gcloud-iam.nkn-it.de/
+group_iam:
+  app-gcp-legacy-ibm-cf-fin-admin@psi.de:
+    - roles/admin
+  app-gcp-legacy-ibm-cf-its-admin@psi.de:
+    - roles/admin
+  app-gcp-cft@psi.de:
+    - roles/admin
+
+# [opt] Org policy overrides defined at project level
+org_policies:
+  gcp.resourceLocations:
+    rules:
+      - allow:
+          values:
+            - in:europe-west3-locations
+            - in:europe-west4-locations
+  # Slalom: Disallow own WIF providers. Projects should use central WIF providers from *-prod-iac-core-0 project.
+  iam.workloadIdentityPoolProviders:
+    rules:
+      - deny:
+          all: true
+  iam.workloadIdentityPoolAwsAccounts:
+    rules:
+      - deny:
+          all: true

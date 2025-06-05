@@ -1,0 +1,4 @@
+unique_id: mes-platform-developer-self-service
+description: developer-self-service-test-application
+merge_pipelines_enabled: true
+merge_trains_enabled: false

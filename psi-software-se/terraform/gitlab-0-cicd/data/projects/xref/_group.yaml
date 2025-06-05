@@ -1,0 +1,5 @@
+name: xref
+description: Project xref
+access_groups:
+  organization/xref/app-gcp-sbox-xref: developer
+  organization/xref/app-gcp-sbox-xref-admins: developer

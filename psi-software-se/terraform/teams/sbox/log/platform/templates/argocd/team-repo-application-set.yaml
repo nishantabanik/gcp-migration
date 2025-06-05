@@ -1,0 +1,95 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: team-repos
+  namespace: '{{ .Values.argocd.namespace }}'
+  annotations:
+  {{- with .Values.teamRepos.annotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - matrix:
+        generators:
+          - scmProvider:
+              cloneProtocol: ssh
+              gitlab:
+                group: "238"
+                api: https://odin.internal.psicloud.de/
+                allBranches: true
+                includeSubgroups: false
+                includeSharedProjects: false
+                tokenRef:
+                  secretName: argocd-gitlab-token
+                  key: token
+                insecure: true
+              filters:
+                - branchMatch: main
+                  pathsExist: [ deploy ]
+          - git:
+              repoURL: "{{ .url }}"
+              revision: "{{ .branch }}"
+              files:
+                - path: "deploy/*/config.json"
+    - matrix:
+        generators:
+          - scmProvider:
+              cloneProtocol: ssh
+              gitlab:
+                group: "238"
+                api: https://odin.internal.psicloud.de/
+                allBranches: true
+                includeSubgroups: false
+                includeSharedProjects: false
+                tokenRef:
+                  secretName: argocd-gitlab-token
+                  key: token
+                insecure: true
+              filters:
+                - branchMatch: ^feature
+                  pathsExist: [ deploy]
+          - git:
+              repoURL: "{{ .url }}"
+              revision: "{{ .branch }}"
+              files:
+                - path: "deploy/*/config.json"
+            selector:
+              matchLabels:
+                deployOnFeatureBranch: "true"
+  template:
+    metadata:
+      name: "{{ print .repository \"-\" .path.basenameNormalized \"-\" .branchNormalized | trunc 53 }}"
+      namespace: "{{ .repository }}"
+      labels:
+        branch: "{{ .branchNormalized }}"
+      annotations:
+      {{- with .Values.teamRepos.repoAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      destination:
+        namespace: "{{ .repository }}-{{ .branchNormalized }}"
+        server: 'https://kubernetes.default.svc'
+      source:
+        repoURL: "{{ .url }}"
+        targetRevision: "{{ .branch }}"
+        path: "{{ .path.path }}"
+        helm:
+          values: |
+            branch: {{ .branch }}
+            branchNormalized: {{ .branchNormalized }}
+            global:
+            {{- with .Values.computeInstance }}
+              {{- toYaml . | nindent 14 }}
+            {{- end }}
+      sources: []
+      project: default
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+          - PruneLast=true

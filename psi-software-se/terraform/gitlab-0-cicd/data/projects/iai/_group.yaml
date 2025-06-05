@@ -1,0 +1,5 @@
+name: iai
+description: Team IAI
+access_groups:
+  organization/iai/app-gcp-sbox-iai: developer
+  organization/iai/app-gcp-sbox-iai-admins: developer

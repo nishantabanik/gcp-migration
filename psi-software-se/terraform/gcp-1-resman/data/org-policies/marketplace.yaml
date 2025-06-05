@@ -1,0 +1,6 @@
+# skip boilerplate check
+
+# Slalom: Disable public marketplace
+commerceorggovernance.disablePublicMarketplace:
+  rules:
+  - enforce: true

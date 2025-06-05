@@ -1,0 +1,7 @@
+unique_id: GANESISBOXREPO12
+description: ganesi
+access_groups:
+  organization/ganesi/app-gcp-sbox-ganesi-admins: developer
+  organization/ganesi/app-gcp-sbox-ganesi: reporter
+  organization/csf/app-gcp-sbox-csf-admins: reporter
+  organization/csf/app-gcp-sbox-csf: reporter

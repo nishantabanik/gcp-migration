@@ -1,0 +1,89 @@
+# Use `gcloud beta billing accounts list`
+billing_account = {
+  id = "012345-67890A-BCDEF0"
+}
+
+# Use `gcloud organizations list`
+organization = {
+  domain      = "example.org"
+  id          = 1234567890
+  customer_id = "C000001"
+}
+
+# Use something unique and no longer than 9 characters
+# A good prefix is: [VERY-SHORT-NAME]-[NUMBER]
+prefix = "fu-bar"
+
+# Slalom: Limitation of resources to regions in the EU
+locations = {
+  # Slalom: Limit GCS buckets to European Union (EU).
+  #         The Terraform state and output are stored in buckets.
+  #         Multi-region should be used because of fault tolerance.
+  #         The location cannot be easily changed later.
+  gcs = "EU"
+  # Slalom: Limit log export bucket to Frankfurt
+  logging = "europe-west3"
+  # Slalom: Limit log export Pup/Sub to Frankfurt
+  pubsub = ["europe-west3"]
+  # Slalom: Limit BigQuery billing export to Frankfurt
+  bq = "europe-west3"
+  # Slalom: Limit Cloud Build location for the trigger to Belgium (https://gcloud-compute.com/europe-west1.html)
+  # https://cloud.google.com/build/docs/locations#restricted_regions_for_some_projects
+  trigger = "europe-west1"
+}
+
+# Slalom: Configure Workload Identity Pool Provider for GitHub
+federated_identity_providers = {
+  # Use something unique and no longer than 9 characters
+  gh-sample = {
+    attribute_condition = "attribute.repository_owner==\"my-github-org\""
+    issuer              = "github"
+    custom_settings     = null
+  }
+}
+# Slalom: Configure CI/CD with GitHub
+# Note: Set the branch to null to allow the entire repository to login via WIF provider.
+#       Set the branch to "main" to only allow login from the main branch (no other branch).
+cicd_repositories = {
+  bootstrap = {
+    branch            = "main"
+    identity_provider = "gh-sample"
+    name              = "my-gh-org/0-bootstrap"
+    type              = "github"
+  }
+  resman = {
+    branch            = "main"
+    identity_provider = "gh-sample"
+    name              = "my-gh-org/1-resman"
+    type              = "github"
+  }
+}
+
+# Slalom: (Deprecated) Create repos in Google Cloud Source.
+/*
+deprecated_sourcerepo = true
+cicd_repositories = {
+  bootstrap = {
+    branch            = "master"
+    identity_provider = "null"
+    name              = "fast/0-bootstrap"
+    type              = "sourcerepo"
+  }
+  resman = {
+    branch            = "master"
+    identity_provider = "null"
+    name              = "fast/1-resman"
+    type              = "sourcerepo"
+  }
+}
+*/
+
+# Slalom: Enable tested and supported features
+fast_features = {
+  project_factory = true
+  sandbox         = true
+  teams           = true
+}
+
+# Slalom: Create local config. Do not change!
+outputs_location = "~/fast-config/"

@@ -1,0 +1,52 @@
+# Test for CFIT-633 from Slalom
+
+folder_id: folders/887490266543
+
+# [opt] Contacts for billing alerts and important notifications - merged with the ones defined in defaults
+essential_contacts:
+  - wszwed@psi.de
+
+# Projects should define mandatory labels (environment, owner, creator, team)
+labels:
+  application: c2p-test
+  creator: wszwed
+  environment: development
+  owner: gcp-platform-team
+  team: platform-team
+
+# [opt] Authoritative IAM bindings in group => [roles] format
+#         Overview of all roles: https://gcloud-iam.nkn-it.de/
+group_iam:
+  app-gcp-cft@psi.de:
+    - roles/admin
+
+# [NOT opt] CICD config for WIF and service account. GitLab project name specified as [[GITLAB_PROJECT]] can be created afterwards.
+cicd: null
+
+# [opt] Org policy overrides defined at project level
+org_policies:
+  gcp.resourceLocations:
+    rules:
+    - allow:
+        values:
+        - in:europe-west3-locations
+
+# [opt] VPC setup
+vpc:
+  # Host project the project will be service project of
+  host_project: psi-de-0-c2p-net-spoke-0
+
+  # [opt] If set, enables the container API
+  gke_setup:
+    # Grants "roles/container.hostServiceAgentUser" to the container robot if set
+    enable_host_service_agent: true
+    # Slalom:
+    # Do not grant "roles/compute.securityAdmin" to the container robot
+    # Do not allow managing firewall resources from the service project GKE service account
+    enable_security_admin: false
+
+  # [opt] Subnets in the host project where principals will be granted networkUser
+  # in region/subnet-name => [principals]
+  subnets_iam:
+    europe-west3/c2p-default-ew3:
+      - group:app-gcp-cft@psi.de

@@ -1,0 +1,6 @@
+unique_id: mes-product-wdk-web-pai-web-workflows
+description: pai-web-workflows
+merge_pipelines_enabled: false
+merge_trains_enabled: false
+merge_method: merge
+squash_option: default_off

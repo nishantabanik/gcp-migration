@@ -1,0 +1,5 @@
+unique_id: sbox-csf
+description: Team CSF
+access_groups:
+  organization/csf/app-gcp-sbox-csf-admins: developer
+  organization/csf/app-gcp-sbox-csf: reporter

@@ -1,0 +1,19 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: backstage
+  annotations:
+        backstage.io/techdocs-ref: value
+  description: |
+    An Internal Developer Platform (IDP) is a central interface that enables developers to access the tools, resources, and environments they need to build, test, and deploy applications efficiently. Our IDP is designed to provide a unified and simplified experience, streamlining workflows and enhancing collaboration across teams.
+  links:
+    - title: Website
+      url: http://index.log.dev.gcp.psi.de/
+    - title: Documentation
+      url: http://index.log.dev.gcp.psi.de/
+    - title: Rocket.Chat
+      url: https://chat.psicloud.de/channel/log-devops
+spec:
+  type: library
+  owner: IDP
+  lifecycle: production

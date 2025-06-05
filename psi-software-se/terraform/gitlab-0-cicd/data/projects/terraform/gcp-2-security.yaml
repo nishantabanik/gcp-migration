@@ -1,0 +1,9 @@
+unique_id: gcp-2-security
+description: FAST security management.
+access_groups:
+  organization/app-gitlab-security: developer
+
+protected_branches:
+  - name: main
+    push_access_level: no one
+    merge_access_level: maintainer

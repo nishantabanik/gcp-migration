@@ -1,0 +1,20 @@
+# Intellij
+.idea/
+*.iml
+*.iws
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# VS Code
+.vscode
+
+# common
+*.log
+
+# terraform
+.terraform*
+*.tfstate
+terraform.tfstate.backup

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xmlns="http://maven.apache.org/SETTINGS/1.0.0">
+
+    <activeProfiles>
+        <activeProfile>pai</activeProfile>
+    </activeProfiles>
+
+    <profiles>
+        <profile>
+            <id>pai</id>
+            <repositories>
+
+                <repository>
+                    <id>pai-central-releases</id>
+                    <url>https://europe-west3-maven.pkg.dev/psi-de-0-sbox-mes-tools/maven-releases-group/</url>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                    <releases>
+                        <enabled>true</enabled>
+                        <!-- By this we enforce a working style of -->
+                        <!-- not redeploying the same (released) version twice -->
+                        <updatePolicy>never</updatePolicy>
+                    </releases>
+                </repository>
+
+                <repository>
+                    <id>pai-central-snapshots</id>
+                    <url>https://europe-west3-maven.pkg.dev/psi-de-0-sbox-mes-tools/maven-snapshots-group/</url>
+                    <snapshots>
+                        <enabled>true</enabled>
+                        <!-- This file is used in pipelines -->
+                        <!-- which might rely on other feature branches -->
+                        <updatePolicy>always</updatePolicy>
+                    </snapshots>
+                    <releases>
+                        <enabled>false</enabled>
+                    </releases>
+                </repository>
+
+                <!-- Prevent direct access to Maven Central -->
+                <repository>
+                    <id>central</id>
+                    <url>https://europe-west3-maven.pkg.dev/psi-de-0-sbox-mes-tools/maven-central-proxy/</url>
+                    <layout>default</layout>
+                    <releases>
+                        <enabled>true</enabled>
+                        <updatePolicy>daily</updatePolicy>
+                    </releases>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </repository>
+
+            </repositories>
+            <pluginRepositories>
+
+                <pluginRepository>
+                    <id>pai-central-releases</id>
+                    <url>https://europe-west3-maven.pkg.dev/psi-de-0-sbox-mes-tools/maven-releases-group/</url>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                    <releases>
+                        <enabled>true</enabled>
+                        <updatePolicy>never</updatePolicy>
+                    </releases>
+                </pluginRepository>
+
+                <pluginRepository>
+                    <id>pai-central-snapshots</id>
+                    <url>https://europe-west3-maven.pkg.dev/psi-de-0-sbox-mes-tools/maven-snapshots-group/</url>
+                    <snapshots>
+                        <enabled>true</enabled>
+                        <updatePolicy>daily</updatePolicy>
+                    </snapshots>
+                    <releases>
+                        <enabled>false</enabled>
+                    </releases>
+                </pluginRepository>
+
+                <!-- Prevent direct access to Maven Central -->
+                <pluginRepository>
+                    <id>central</id>
+                    <url>https://europe-west3-maven.pkg.dev/psi-de-0-sbox-mes-tools/maven-central-proxy/</url>
+                    <layout>default</layout>
+                    <releases>
+                        <enabled>true</enabled>
+                        <updatePolicy>daily</updatePolicy>
+                    </releases>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </pluginRepository>
+
+            </pluginRepositories>
+        </profile>
+
+    </profiles>
+
+</settings>
+

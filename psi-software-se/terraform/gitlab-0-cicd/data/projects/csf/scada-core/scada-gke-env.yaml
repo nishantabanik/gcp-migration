@@ -1,0 +1,20 @@
+unique_id: csf-scada-gke-env
+description: scada-gke-env
+merge_pipelines_enabled: false
+merge_trains_enabled: false # enable it after .gitlab-ci.yml is introduced
+squash_commit_template: |
+  %{title}
+  
+  %{description}
+initialize_with_readme: false
+
+# push rules
+branch_name_regex: main|((feature|bugfix)\/[A-Z]+-\d+(?:[_-]\S+)?)
+commit_message_regex: ^(?:(Revert|Reapply) ")?(?:[A-Z]+-\d+ )+(?:[A-Z].+)(?:\n\n\S+(?:.|\n)+[\S])?
+approvals_required: 0
+
+protected_branches:
+  - name: main
+    push_access_level: no one
+    merge_access_level: developer
+    code_owner_approval_required: true

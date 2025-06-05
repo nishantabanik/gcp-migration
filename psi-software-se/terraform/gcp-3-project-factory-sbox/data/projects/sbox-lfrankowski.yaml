@@ -1,0 +1,167 @@
+# [opt] Contacts for billing alerts and important notifications - merged with the ones defined in defaults
+essential_contacts:
+  - lfrankowski@psi.de
+
+# [opt] CICD config for WIF and service account. GitLab project name specified as [[GITLAB_PROJECT]] can be created afterwards.
+cicd:
+  repository: psi-software-se/terraform/teams/sbox/lfrankowski
+  sa_roles:
+    - roles/editor
+    - roles/artifactregistry.admin
+    - roles/iap.admin
+
+# Projects should define mandatory labels (environment, owner, creator, team)
+labels:
+  environment: sandbox
+  owner: gcp-team-lfrankowski
+  creator: lfrankowski
+  team: lfrankowski
+  application: sbox-lfrankowski
+
+# [opt] Service account to create for the project and their roles on the project
+# in name => [roles] format
+#service_accounts:
+#  kubernetes-1:
+#    - roles/container.defaultNodeServiceAccount
+
+service_accounts_iam:
+  apps-sa:
+    roles/iam.workloadIdentityUser:
+      - principalSet://iam.googleapis.com/projects/504787948326/locations/global/workloadIdentityPools/psi-de-0-bootstrap/attribute.namespace_path/psi-software-se/csf
+
+# [opt] Authoritative IAM bindings in group => [roles] format
+#         Overview of all roles: https://gcloud-iam.nkn-it.de/
+#group_iam:
+#  app-gcp-cft@psi.de:
+#    - roles/viewer
+
+# [opt] Direct IAM
+iam:
+  roles/owner:
+    - user:lfrankowski@psi.de
+
+# [opt] Org policy overrides defined at project level
+org_policies:
+  gcp.resourceLocations:
+    rules:
+      - allow:
+          values:
+            - in:europe-west3-locations
+            - in:europe-west4-locations
+  # Slalom: Disallow own WIF providers. Projects should use central WIF providers from *-prod-iac-core-0 project.
+  iam.workloadIdentityPoolProviders:
+    rules:
+      - deny:
+          all: true
+  iam.workloadIdentityPoolAwsAccounts:
+    rules:
+      - deny:
+          all: true
+
+#services:
+#  # Cloud Pub/Sub API
+#  - pubsub.googleapis.com
+#  # Cloud Build API
+#  - cloudbuild.googleapis.com
+#  # Cloud Source Repositories API: (Deprecated) Cloud Source Repositories isn't available to new customers.
+#  # - sourcerepo.googleapis.com
+#  # Cloud Scheduler API
+#  - cloudscheduler.googleapis.com
+#  # Service Usage API
+#  - serviceusage.googleapis.com
+#  # Cloud Resource Manager API
+#  - cloudresourcemanager.googleapis.com
+#  # IAM Service Account Credentials API
+#  - iamcredentials.googleapis.com
+#  # Cloud Function API
+#  - cloudfunctions.googleapis.com
+#  # Secret Manager
+#  - secretmanager.googleapis.com
+#  # Container Security API
+#  - containersecurity.googleapis.com
+#  # Artifact Registry
+#  - artifactregistry.googleapis.com
+#  # Container Scanning API
+#  - containerscanning.googleapis.com
+#  # Cloud SQL
+#  - sql-component.googleapis.com
+#  # Google Cloud Firestore API
+#  - firestore.googleapis.com
+#  # Cloud Datastore API
+#  - datastore.googleapis.com
+#  # Organization Policy API
+#  - orgpolicy.googleapis.com
+#  # Cloud Deployment Manager V2 API
+#  - deploymentmanager.googleapis.com
+#  # Cloud Deploy API
+#  - clouddeploy.googleapis.com
+#  # Cloud Data Loss Prevention (DLP) API
+#  - dlp.googleapis.com
+#  # Web Security Scanner API
+#  - websecurityscanner.googleapis.com
+#  # Certificate Authority Service API
+#  - privateca.googleapis.com
+#  # Certificate Manager API
+#  - certificatemanager.googleapis.com
+#  # Cloud Key Management Service (KMS) API
+#  - cloudkms.googleapis.com
+#  # Binary Authorization API
+#  - binaryauthorization.googleapis.com
+#  # Managed Service for Microsoft Active Directory API
+#  - managedidentities.googleapis.com
+#  # reCAPTCHA Enterprise API
+#  - recaptchaenterprise.googleapis.com
+#  # Google Cloud Memorystore for Redis API
+#  - redis.googleapis.com
+#  # Cloud Memorystore for Memcached API
+#  - memcache.googleapis.com
+#  # Batch API
+#  - batch.googleapis.com
+#  # API Gateway API
+#  - apigateway.googleapis.com
+#  # Service Control API
+#  - servicecontrol.googleapis.com
+#  # Service Management API
+#  - servicemanagement.googleapis.com
+#  # Transfer Appliance API
+#  - transferappliance.googleapis.com
+#  # Cloud Tasks API
+#  - cloudtasks.googleapis.com
+#  # Workflows API
+#  - workflows.googleapis.com
+#  - workflowexecutions.googleapis.com
+#  # Connector Platform API
+#  - connectors.googleapis.com
+#  # Application Integration API
+#  - integrations.googleapis.com
+#  # Cloud IDS API
+#  - ids.googleapis.com
+#  # Backup and DR Service API
+#  - backupdr.googleapis.com
+#  # Cloud Composer API
+#  - composer.googleapis.com
+#  # Cloud Dataproc API
+#  - dataproc.googleapis.com
+#  # Datastream API
+#  - datastream.googleapis.com
+#  # Google Cloud Data Catalog API
+#  - datacatalog.googleapis.com
+#  # Cloud Data Fusion API
+#  - datafusion.googleapis.com
+#  # Vertex AI API
+#  #  - aiplatform.googleapis.com
+#  # Notebooks API
+#  #  - notebooks.googleapis.com
+#  # Dataflow API
+#  - dataflow.googleapis.com
+#  # Bare Metal Solution API
+#  - baremetalsolution.googleapis.com
+#  # Eventarc
+#  - eventarc.googleapis.com
+#  - eventarcpublishing.googleapis.com
+#  # Cloud Runtime Configuration API
+#  - runtimeconfig.googleapis.com
+#  # Cloud SQL Admin API
+#  - sqladmin.googleapis.com
+#  # Service Networking API
+#  - servicenetworking.googleapis.com

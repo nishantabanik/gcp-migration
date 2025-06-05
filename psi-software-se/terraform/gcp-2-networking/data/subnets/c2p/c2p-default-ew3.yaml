@@ -1,0 +1,7 @@
+# skip boilerplate check
+
+# Slalom: Frankfurt (europe-west3)
+#         https://gcloud-compute.com/europe-west3.html
+region: europe-west3
+ip_cidr_range: 10.92.2.0/24
+description: Default subnet for c2p

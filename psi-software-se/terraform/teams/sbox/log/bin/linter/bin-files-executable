@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+set -ueo pipefail
+IFS=$'\n\t'
+
+if git ls-tree -r HEAD bin/ | grep -v "^100755 "; then
+  echo "Some least one file in bin/ is not executable."
+  exit 1
+fi

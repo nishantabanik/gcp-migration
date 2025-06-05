@@ -1,0 +1,6 @@
+apiVersion: v2
+name: log-idp
+description: Internal Developer Portal for PSIlogistics
+type: application
+version: 0.1.0-299.0cfec14a
+appVersion: "0.1.0-299.0cfec14a"

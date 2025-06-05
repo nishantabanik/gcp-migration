@@ -1,0 +1,4 @@
+unique_id: csf-psiconnect-manifests-base
+description: Kustomize base for PSIconnect deployments
+merge_pipelines_enabled: true
+merge_trains_enabled: true

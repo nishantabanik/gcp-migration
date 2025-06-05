@@ -1,0 +1,48 @@
+# Projects should belong to C2P folder
+folder_id: folders/887490266543
+
+# Setup for billing alerts
+# Slalom: It is better to have more billing alerts than too few.
+billing_alert:
+  amount: 400
+  thresholds:
+    current: [0.5, 0.8, 1.0, 1.1, 2.0, 5.0, 10.0]
+    forecasted: [1.0, 2.0, 5.0, 10.0]
+  # EXCLUDE_ALL_CREDITS / INCLUDE_ALL_CREDITS
+  credit_treatment: EXCLUDE_ALL_CREDITS
+
+# Contacts for billing alerts and important notifications
+# Slalom: Please remember the organization containment for essential contacts established in the 1-resman stage.
+essential_contacts:
+  - mszmeterowicz@psi.de
+
+# Labels set for all projects
+labels:
+  environment: development
+
+# Additional notification channels for billing
+notification_channels: []
+
+# APIs to enable on the projects.
+# Slalom: Enable APIs for many Google services
+
+services:
+  - billingbudgets.googleapis.com
+  - binaryauthorization.googleapis.com
+  - cloudbilling.googleapis.com
+  - cloudbuild.googleapis.com
+  - cloudkms.googleapis.com
+  - cloudresourcemanager.googleapis.com
+  - compute.googleapis.com
+  - dns.googleapis.com
+  - essentialcontacts.googleapis.com
+  - iam.googleapis.com
+  - iamcredentials.googleapis.com
+  - logging.googleapis.com
+  - monitoring.googleapis.com
+  - orgpolicy.googleapis.com
+  - secretmanager.googleapis.com
+  - servicecontrol.googleapis.com
+  - servicenetworking.googleapis.com
+  - serviceusage.googleapis.com
+  - storage.googleapis.com

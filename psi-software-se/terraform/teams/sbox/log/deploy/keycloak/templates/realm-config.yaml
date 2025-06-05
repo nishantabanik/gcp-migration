@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: realm-config
+data:
+  platform-realm.json: |-
+{{ .Files.Get "conf/platform-realm.json" | indent 4 }}
+  master-realm.json: |-
+{{ .Files.Get "conf/master-realm.json" | indent 4 }}

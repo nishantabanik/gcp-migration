@@ -1,0 +1,3 @@
+unique_id: simple-helm
+description: "Example: deploy helm chart to GKE"
+approvals_required: 0

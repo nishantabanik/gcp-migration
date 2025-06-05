@@ -1,0 +1,191 @@
+{{- define "de.psi.log.idp.v1.servicehosttemplate.forProvider" -}}
+disk:
+  - autoDelete: true
+    boot: true
+    sourceImage: {{ .Values.computeInstance.image }}
+machineType: {{ .Values.computeInstance.machineType }}
+metadata: {}
+namePrefix: service-host-template-
+networkInterface:
+  - subnetwork: {{ .Values.computeInstance.subnetwork }}
+{{- end }}
+
+{{- define "de.psi.log.idp.v1.servicehosttemplate.version" -}}
+{{- include "de.psi.log.idp.v1.servicehosttemplate.forProvider" . | toString | sha256sum | substr 0 8 }}
+{{- end -}}
+---
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: servicehost.gcp
+spec:
+  compositeTypeRef:
+    apiVersion: idp.log.psi.de/v1alpha1
+    kind: XServiceHost
+  mode: Pipeline
+  pipeline:
+    - step: patch-and-transform
+      functionRef:
+        name: function-patch-and-transform
+      input:
+        apiVersion: pt.fn.crossplane.io/v1beta1
+        kind: Resources
+        resources:
+          - name: service-host-template
+            base:
+              apiVersion: compute.gcp.upbound.io/v1beta2
+              kind: InstanceTemplate
+              metadata:
+                labels:
+                  idp.log.psi.de/instance-template: service-host-template
+                  idp.log.psi.de/instance-template-version: {{ include "de.psi.log.idp.v1.servicehosttemplate.version" . | quote }}
+                name: service-host-template-{{ include "de.psi.log.idp.v1.servicehosttemplate.version" . }}
+              spec:
+                forProvider:
+                  {{- include "de.psi.log.idp.v1.servicehosttemplate.forProvider" . | nindent 18 }}
+                providerConfigRef:
+                  name: {{ .Values.computeInstance.providerConfigRefName }}
+            patches:
+              - fromFieldPath: spec.machineType
+                toFieldPath: spec.forProvider.machineType
+                type: FromCompositeFieldPath
+              - fromFieldPath: spec.initScript
+                toFieldPath: spec.forProvider.metadata.startup-script
+                type: FromCompositeFieldPath
+              - fromFieldPath: spec.enableSsh
+                toFieldPath: spec.forProvider.tags
+                transforms:
+                  - type: convert
+                    convert:
+                      toType: string
+                  - type: map
+                    map:
+                      true: ["internal-http-server","ssh-server"]
+                      false: ["internal-http-server"]
+          - name: service-host-mig
+            base:
+              apiVersion: compute.gcp.upbound.io/v1beta2
+              kind: RegionInstanceGroupManager
+              metadata:
+                labels:
+                  idp.log.psi.de/mig: service-host-mig
+                name: service-host-mig
+              spec:
+                forProvider:
+                  name: service-host-mig
+                  region: {{ .Values.computeInstance.region }}
+                  baseInstanceName: ""
+                  description: Managed service hosts
+                  targetSize: 1
+                  updatePolicy:
+                    maxSurgeFixed: 3 # we need here at least the amount of different zones in our region
+                    maxUnavailableFixed: 3
+                    replacementMethod: SUBSTITUTE
+                    type: PROACTIVE
+                  version:
+                    - instanceTemplateSelector:
+                        matchControllerRef: true
+                      name: prod
+                providerConfigRef:
+                  name: {{ .Values.computeInstance.providerConfigRefName }}
+            patches:
+              - fromFieldPath: metadata.name
+                toFieldPath: spec.forProvider.baseInstanceName
+                type: FromCompositeFieldPath
+              - fromFieldPath: metadata.name
+                toFieldPath: spec.forProvider.name
+                type: FromCompositeFieldPath
+                transforms:
+                  - type: string
+                    string:
+                      type: Format
+                      fmt: "%s-service-host-mig"
+          - name: service-host-backend-service
+            base:
+              apiVersion: compute.gcp.upbound.io/v1beta2
+              kind: RegionBackendService
+              metadata:
+                labels:
+                  idp.log.psi.de/backend-service: service-host-backend-service
+                name: service-host-backend-service
+              spec:
+                forProvider:
+                  region: {{ .Values.computeInstance.region }}
+                  protocol: HTTP
+                  timeoutSec: 10
+                  loadBalancingScheme: INTERNAL_MANAGED # default is EXTERNAL
+                  healthChecksSelector:
+                    matchControllerRef: true
+                  backend:
+                    - balancingMode: UTILIZATION
+                      capacityScaler: 1.0
+                      groupSelector:
+                        matchControllerRef: true
+                providerConfigRef:
+                  name: {{ .Values.computeInstance.providerConfigRefName }}
+          - name: service-host-backend-service-hc
+            base:
+              apiVersion: compute.gcp.upbound.io/v1beta2
+              kind: RegionHealthCheck
+              metadata:
+                labels:
+                  idp.log.psi.de/health-check: service-host-backend-service-hc
+                name: service-host-backend-service-hc
+              spec:
+                forProvider:
+                  region: {{ .Values.computeInstance.region }}
+                  httpHealthCheck:
+                    port: 80
+                  timeoutSec: 1
+                providerConfigRef:
+                  name: {{ .Values.computeInstance.providerConfigRefName }}
+          - name: service-host-url-map
+            base:
+             apiVersion: compute.gcp.upbound.io/v1beta2
+             kind: RegionURLMap
+             metadata:
+               labels:
+                 idp.log.psi.de/url-map: service-host-url-map
+               name: service-host-url-map
+             spec:
+               forProvider:
+                 region: {{ .Values.computeInstance.region }}
+                 defaultServiceSelector:
+                   matchControllerRef: true
+               providerConfigRef:
+                 name: {{ .Values.computeInstance.providerConfigRefName }}
+          - name: service-host-target-http-proxy
+            base:
+              apiVersion: compute.gcp.upbound.io/v1beta1
+              kind: RegionTargetHTTPProxy
+              metadata:
+                labels:
+                  idp.log.psi.de/target-http-proxy: service-host-target-http-proxy
+                name: service-host-target-http-proxy
+              spec:
+                forProvider:
+                  region: {{ .Values.computeInstance.region }}
+                  urlMapSelector:
+                    matchControllerRef: true
+                providerConfigRef:
+                  name: {{ .Values.computeInstance.providerConfigRefName }}
+          - name: service-host-forwarding-rule
+            base:
+              apiVersion: compute.gcp.upbound.io/v1beta2
+              kind: ForwardingRule
+              metadata:
+                labels:
+                  idp.log.psi.de/forwarding-rule: service-host-forwarding-rule
+                name: forwarding-rule
+              spec:
+                forProvider:
+                  ipProtocol: TCP
+                  loadBalancingScheme: INTERNAL_MANAGED
+                  subnetwork: {{ .Values.computeInstance.subnetwork }}
+                  networkTier: PREMIUM
+                  portRange: "80"
+                  region: {{ .Values.computeInstance.region }}
+                  targetSelector:
+                    matchControllerRef: true
+                providerConfigRef:
+                  name: {{ .Values.computeInstance.providerConfigRefName }}

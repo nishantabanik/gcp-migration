@@ -1,0 +1,83 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "log-idp.fullname" . }}
+  labels:
+    {{- include "log-idp.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.backstage.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "log-idp.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.backstage.Annotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "log-idp.labels" . | nindent 8 }}
+        {{- with .Values.backstage.labels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.backstage.image.name }}:{{ .Values.backstage.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.backstage.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 7007
+          env:
+            - name: NODE_ENV
+              value: {{ .Values.mode | quote }}
+            - name: BACKSTAGE_HOST
+              value: "https://{{ .Values.ingress.host }}"
+            - name: GITLAB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: gitlab-token-secret
+                  key: gitlab-token
+            {{- if eq .Values.mode "production" }}
+            - name: POSTGRES_HOST
+              value: {{ include "log-idp.fullname" . }}-db-rw
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "log-idp.fullname" . }}-db-superuser
+                  key: username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "log-idp.fullname" . }}-db-superuser
+                  key: password
+            - name: AUTH_BASE_URL
+              value: "https://{{ .Values.auth.baseUrl }}"
+            - name: AUTH_REALM
+              value: "{{ .Values.auth.realm }}"
+            - name: AUTH_METADA_URL
+              value: "https://{{ .Values.auth.baseUrl }}/realms/{{ .Values.auth.realm }}/.well-known/openid-configuration"         
+            - name: BACKSTAGE_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: auth-secrets
+                  key: BACKSTAGE_CLIENT_ID
+            - name: BACKSTAGE_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: auth-secrets
+                  key: BACKSTAGE_CLIENT_SECRET
+            - name: BACKSTAGE_SESSION_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: auth-secrets
+                  key: BACKSTAGE_SESSION_SECRET      
+            {{- end }}
+          resources:
+            {{- toYaml .Values.backstage.resources | nindent 12 }}
+          {{- if eq .Values.mode "development" }}
+          command: ["node", "packages/backend", "--config", "app-config.yaml", "--config", "app-config.ingress.yaml"]
+          {{- end }}

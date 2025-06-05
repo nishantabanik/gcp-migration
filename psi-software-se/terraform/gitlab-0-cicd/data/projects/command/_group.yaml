@@ -1,0 +1,5 @@
+name: command
+description: Team PSIcommand
+access_groups:
+  organization/command/app-gcp-sbox-command-admins: developer
+  organization/command/app-gcp-sbox-command: developer

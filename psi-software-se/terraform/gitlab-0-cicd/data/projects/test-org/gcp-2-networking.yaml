@@ -1,0 +1,9 @@
+unique_id: test-gcp-2-networking
+description: FAST networking management.
+access_groups:
+  organization/app-gitlab-its: developer
+
+protected_branches:
+  - name: main
+    push_access_level: no one
+    merge_access_level: maintainer

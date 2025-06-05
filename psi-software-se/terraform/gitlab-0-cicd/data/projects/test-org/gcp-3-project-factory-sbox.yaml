@@ -1,0 +1,7 @@
+unique_id: test-gcp-3-project-factory-sbox
+description: FAST project factory sandbox.
+
+protected_branches:
+  - name: main
+    push_access_level: no one
+    merge_access_level: developer

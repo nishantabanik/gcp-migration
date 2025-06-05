@@ -1,0 +1,3 @@
+unique_id: simple-nodejs
+description: "Example: build node.js module on GitLab and push it to Artifact Registry"
+approvals_required: 0

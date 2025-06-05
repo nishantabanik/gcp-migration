@@ -1,0 +1,10 @@
+unique_id: csf-incubator-csf
+description: csf
+merge_pipelines_enabled: true
+merge_trains_enabled: true
+
+protected_branches:
+  - name: main
+    push_access_level: no one
+    merge_access_level: developer
+    code_owner_approval_required: true

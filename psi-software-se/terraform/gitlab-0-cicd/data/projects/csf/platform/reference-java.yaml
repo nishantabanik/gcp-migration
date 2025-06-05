@@ -1,0 +1,10 @@
+unique_id: csf-incubator-reference-java
+description: reference-java
+merge_pipelines_enabled: true
+merge_trains_enabled: true
+branch_name_regex: (feature|bugfix)\/[A-Z]+-\d+[_-]\S+
+commit_message_regex: ^(?:(Revert|Reapply) ")?(?:[A-Z]+-\d+ )+(?:[A-Z].+)(?:\n\n\S+(?:.|\n)+[\S])?
+squash_commit_template: |
+  %{title}
+  
+  %{description}

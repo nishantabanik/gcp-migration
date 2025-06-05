@@ -1,0 +1,279 @@
+# Unique id of repository, used internally
+# Type: String
+unique_id: complex-gitlab-project
+
+###### Project config ######
+# https://registry.terraform.io/providers/gitlabhq/gitlab/latest/docs/resources/project
+
+# (Optional) Name of the project.
+# Type: String
+# Default: file name without extension will be used
+name: complex-gitlab-project
+
+# (Optional) Description of the project.
+# Type: String
+# Default: "Project {file-name} (TF managed)"
+description: "Example: all configuration options for git repository"
+
+# (Optional) Visibility level of the project.
+# Type: One of: "private", "internal", "public"
+# Default: "private"
+visibility_level: "private"
+
+# (Optional) Enable merge requests for the project.
+# Type: Boolean
+# Default: true
+merge_requests_enabled: true
+
+# (Optional) Enable issue tracking for the project.
+# Type: Boolean
+# Default: false
+issues_enabled: false
+
+# (Optional) Enable wiki for the project.
+# Type: Boolean
+# Default: false
+wiki_enabled: false
+
+# (Optional) Allow only users with the Maintainer role to pass user-defined variables when triggering a pipeline.
+# Type: Boolean
+# Default: false
+restrict_user_defined_variables: false
+
+# (Optional) Use separate caches for protected branches.
+# Type: Boolean
+# Default: false
+ci_separated_caches: true
+
+# (Optional) Enable or disable merge pipelines.
+# Type: Boolean
+# Default: false
+merge_pipelines_enabled: false
+
+# (Optional) Enable or disable merge trains. Requires merge_pipelines_enabled to be set to true to take effect.
+# Type: Boolean
+# Default: false
+merge_trains_enabled: false
+
+# (Optional) Squash commits when merge request is merged.
+# Type: One of: never (Do not allow), always (Require), default_on (Encourage), or default_off (Allow).
+# Default: "default_on"
+squash_option: "default_on"
+
+# (Optional) Set to true if you want to allow merges only if a pipeline succeeds.
+# Type: Boolean
+# Default: true
+only_allow_merge_if_pipeline_succeeds: true
+
+# (Optional) Enable Auto DevOps for this project.
+# Type: Boolean
+# Default: false
+auto_devops_enabled: false
+
+# (Optional) The minimum role required to set variables when running pipelines and jobs.
+# Type: One of: "developer", "maintainer", "owner", "no_one_allowed"
+# Default: "developer"
+ci_pipeline_variables_minimum_override_role: "developer"
+
+# (Optional) The role required to cancel a pipeline or job.
+# Type: One of: "developer", "maintainer", "no one"
+# Default: "developer"
+ci_restrict_pipeline_cancellation_role: "developer"
+
+# (Optional) The default branch for the project. 
+# If initialize_with_readme is set to false and default_branch is not set explicitly in yaml, then default value is not applied
+# Type: String
+# Default: "main"
+default_branch: "main"
+
+# (Optional) Merge method
+# Type: One of: "merge", "rebase_merge", "ff"
+# Default: "ff"
+merge_method: "ff"
+
+# (Optional) Set to true if you want to allow merges only if all discussions are resolved.
+# Type: Boolean
+# Default: true
+only_allow_merge_if_all_discussions_are_resolved: true
+
+# (Optional) Whether Secret Push Detection is enabled.
+# Type: Boolean
+# Default: true
+pre_receive_secret_detection_enabled: true
+
+# (Optional) Set whether merge requests require an associated issue from Jira.
+# Type: Boolean
+# Default: false
+prevent_merge_without_jira_issue: false
+
+# (Optional) Show link to create/view merge request when pushing from the command line.
+# Type: Boolean
+# Default: true
+printing_merge_request_link_enabled: true
+
+# (Optional) Enable `Delete source branch` option by default for all new merge requests.
+# Type: Boolean
+# Default: true
+remove_source_branch_after_merge: true
+
+# (Optional) Enable shared runners for this project.
+# Type: Boolean
+# Default: true
+shared_runners_enabled: true
+
+# (Optional) Template used to create squash commit message in merge requests.
+# Type: String
+# Default: ""
+squash_commit_template: ""
+
+# (Optional) Create main branch with first commit containing a README.md file. Must be set to true if importing an uninitialized project with a different `default_branch`.
+# Type: Boolean
+# Default: true
+initialize_with_readme: true
+
+# (Optional) All commit author emails must match this regex, e.g. `@my-company.com$`.
+# Type: String
+# Default: ""
+author_email_regex: ""
+
+# (Optional) All branch names must match this regex, e.g. `(feature|bugfix)\/[A-Z]+-\d+(?:[_-]\S+)?`.
+# Type: String
+# Default: ""
+branch_name_regex: ""
+
+# (Optional) Users can only push commits to this repository that were committed with one of their own verified emails.
+# Type: Boolean
+# Default: false
+commit_committer_check: false
+
+# (Optional) Users can only push commits to this repository if the commit author name is consistent with their GitLab account name.
+# Type: Boolean
+# Default: false
+commit_committer_name_check: false
+
+# (Optional) All commit messages must match this regex, e.g. `Fixed \d+\..*`.
+# Type: String
+# Default: ""
+commit_message_regex: ""
+
+# (Optional) GitLab will reject any files that are likely to contain secrets. We currently use Secret push detection instead.
+# Type: Boolean
+# Default: false
+prevent_secrets: false
+
+###### Project approvals ######
+# https://registry.terraform.io/providers/gitlabhq/gitlab/latest/docs/resources/project_approval_rule
+
+# (Optional) The number of approvals required for this rule.
+# Type: Number
+# Default: 1
+approvals_required: 1
+
+###### Project mr approvals ######
+# https://registry.terraform.io/providers/gitlabhq/gitlab/latest/docs/resources/project_level_mr_approvals
+
+# (Optional) Set to true to disable overriding approvers per merge request.
+# Type: Boolean
+# Default: true
+disable_overriding_approvers_per_merge_request: true
+
+# (Optional) Set to true to allow merge requests authors to approve their own merge requests.
+# Type: Boolean
+# Default: false
+merge_requests_author_approval: false
+
+# (Optional) Set to true to disable merge request committers from approving their own merge requests.
+# Type: Boolean
+# Default: true
+merge_requests_disable_committers_approval: true
+
+# (Optional) Set to true to remove all approvals in a merge request when new commits are pushed to its source branch.
+# Type: Boolean
+# Default: true
+reset_approvals_on_push: true
+
+###### Project share groups ######
+# https://registry.terraform.io/providers/gitlabhq/gitlab/latest/docs/resources/project_share_group
+
+# (Optional) Share project with a group
+# Type: Object
+# Default: null
+# Syntax:
+#access_groups:
+#  {group}: {role}
+
+# Roles:
+# no one, minimal, guest, planner, reporter, developer, maintainer, owner
+
+# Example:
+access_groups:
+  organization/cft/app-gcp-cft: developer
+
+###### Project access token (PAT) ######
+# https://registry.terraform.io/providers/gitlabhq/gitlab/latest/docs/resources/project_access_token
+# https://registry.terraform.io/providers/gitlabhq/gitlab/latest/docs/resources/project_variable
+
+# (Optional) Configure Project Access Token (PAT) for project to manage repository from GitLab CI
+# Type: Object
+# Example:
+access_tokens:
+  # Name of the token
+  # Type: String
+  - name: push-token
+    # (Optional) Name of GitLab CI variable. If not defined, name is used for variable name
+    # Type: String
+    variable_name: GITLAB_PUSH_TOKEN
+    # (Optional) Description of token and variable
+    # Type: String
+    description: Test access token for GitLab
+    # (Optional) Access level for token
+    # Type: One of: no one, minimal, guest, planner, reporter, developer, maintainer, owner
+    # Default: guest
+    access_level: maintainer
+    # (Optional) If set to true, the variable will be passed only to pipelines running on protected branches and tags.
+    # Type: Boolean
+    # Default: true
+    protected: true
+    # Scopes to apply to token
+    # Type: Array of values from: api, read_api, read_registry, write_registry, read_repository, write_repository, create_runner, manage_runner, ai_features, k8s_proxy, read_observability, write_observability
+    scopes:
+      - write_repository
+
+###### Branch protection ######
+# https://registry.terraform.io/providers/gitlabhq/gitlab/latest/docs/resources/branch_protection
+
+# (Optional) Configure protected branches for project
+# Default branch is protected automatically when new project is created so it does not need to be repeated here unless you want to override it's settings. 
+# See group settings for initial configuration of default branches protection.
+# Changing default branch does not apply protection to new branch. Default protection is set only when first branch will be created.
+# Type: Object
+# Example:
+protected_branches:
+  # Name of branch to protect. It is recommended to not duplicate branch names here for the project. 
+  # If default branch will be configured here, it's protection settings will be overridden.
+  # Type: String 
+  - name: main
+    # (Optional) Access levels allowed to push to that branch.
+    # Type: One of: "developer", "maintainer", "no one"
+    # Default: maintainer
+    push_access_level: maintainer
+    # (Optional) Access levels allowed to merge to that branch.
+    # Type: One of: "developer", "maintainer", "no one"
+    # Default: developer
+    merge_access_level: developer
+    # (Optional) Can be set to true to allow users with push access to force push.
+    # Type: Boolean
+    # Default: false
+    allow_force_push: false
+    # (Optional) Can be set to true to require code owner approval before merging.
+    # Type: Boolean
+    # Default: false
+    code_owner_approval_required: false
+    # (Optional) Array of access levels group(s) allowed to push to protected branch.
+    # Type: Array of strings
+    groups_allowed_to_push:
+      - organization/cft/app-gcp-cft
+    # (Optional) Array of access levels group(s) allowed to merge to protected branch.
+    # Type: Array of strings
+    groups_allowed_to_merge: 
+      - organization/cft/app-gcp-cft

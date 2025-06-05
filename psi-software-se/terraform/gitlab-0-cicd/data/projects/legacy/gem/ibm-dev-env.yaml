@@ -1,0 +1,10 @@
+unique_id: GEMLEGACYARCHIVECONFIG
+description: Archive for terraform configuration of our old IBM setup 
+only_allow_merge_if_pipeline_succeeds: false
+approvals_required: 0
+initialize_with_readme: false
+protected_branches:
+  - name: main
+    push_access_level: developer
+    merge_access_level: developer
+    allow_force_push: true

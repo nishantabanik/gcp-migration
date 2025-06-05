@@ -1,0 +1,5 @@
+name: pjfc-poc
+description: Team PJF Classic
+access_groups:
+  organization/pjfc-poc/app-gcp-sbox-pjfc-poc: developer
+  organization/pjfc-poc/app-gcp-sbox-pjfc-poc-admins: developer

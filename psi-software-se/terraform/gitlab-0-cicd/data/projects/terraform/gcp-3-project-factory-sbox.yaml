@@ -1,0 +1,21 @@
+unique_id: gcp-3-project-factory-sbox
+description: FAST project factory sandbox.
+access_groups:
+# keep ordered alphabetically
+  organization/app-gitlab-slalom: developer
+  organization/cft/app-gcp-cft: developer
+  organization/command/app-gcp-sbox-command-admins: developer
+  organization/csf/app-gcp-sbox-csf-admins: developer
+  organization/ganesi/app-gcp-sbox-ganesi-admins: developer
+  organization/iai/app-gcp-sbox-iai-admins: developer
+  organization/its/app-gcp-sbox-its-admins: developer
+  organization/log/app-gcp-sbox-log-admins: developer
+  organization/mes/app-gcp-sbox-mes-admins: developer
+  organization/pjfc-poc/app-gcp-sbox-pjfc-poc-admins: developer
+  organization/ppl-dep-log/app-gcp-sbox-ppl-dep-log-admins: developer
+  organization/xref/app-gcp-sbox-xref-admins: developer
+
+protected_branches:
+  - name: main
+    push_access_level: no one
+    merge_access_level: developer

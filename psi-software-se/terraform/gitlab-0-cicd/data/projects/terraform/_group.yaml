@@ -1,0 +1,18 @@
+name: Terraform IaC
+description: Terraform Infrastructure as Code (IaC)
+access_groups:
+# keep ordered alphabetically
+  organization/app-gitlab-cft: maintainer
+  organization/app-gitlab-security: developer
+  organization/app-gitlab-slalom: developer
+  organization/cft/app-gcp-cft: reporter
+  organization/command/app-gcp-sbox-command-admins: reporter
+  organization/csf/app-gcp-sbox-csf-admins: reporter
+  organization/ganesi/app-gcp-sbox-ganesi-admins: reporter
+  organization/iai/app-gcp-sbox-iai-admins: reporter
+  organization/its/app-gcp-sbox-its-admins: reporter
+  organization/log/app-gcp-sbox-log-admins: reporter
+  organization/mes/app-gcp-sbox-mes-admins: reporter
+  organization/pjfc-poc/app-gcp-sbox-pjfc-poc-admins: reporter
+  organization/ppl-dep-log/app-gcp-sbox-ppl-dep-log-admins: reporter
+  organization/xref/app-gcp-sbox-xref-admins: reporter

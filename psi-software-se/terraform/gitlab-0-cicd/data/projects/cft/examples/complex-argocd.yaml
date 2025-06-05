@@ -1,0 +1,3 @@
+unique_id: complex-argocd
+description: "Example: helm chart deployed to GKE using ArgoCD"
+approvals_required: 0

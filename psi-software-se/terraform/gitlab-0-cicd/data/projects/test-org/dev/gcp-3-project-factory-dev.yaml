@@ -1,0 +1,7 @@
+unique_id: test-template-gcp-3-project-factory-dev
+description: FAST project factory dev.
+
+protected_branches:
+  - name: main
+    push_access_level: no one
+    merge_access_level: developer

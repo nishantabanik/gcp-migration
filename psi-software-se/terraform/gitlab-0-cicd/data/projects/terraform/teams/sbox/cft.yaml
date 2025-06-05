@@ -1,0 +1,4 @@
+unique_id: sbox-cft
+description: Team CFT
+access_groups:
+  organization/cft/app-gcp-cft: developer

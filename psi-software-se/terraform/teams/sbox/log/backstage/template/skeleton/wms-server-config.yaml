@@ -1,0 +1,9 @@
+apiVersion: wms.log.psi.de/v1alpha1
+kind: WmsServerHost
+metadata:
+  name: ${{ values.serverName }}
+spec:
+  size: ${{ values.size }}
+  enableSsh: ${{ values.enableSsh }}
+  initScript: |
+    ${{ values.initScript }}

@@ -1,0 +1,10 @@
+# skip boilerplate check
+
+# Slalom: Frankfurt (europe-west3)
+#         https://gcloud-compute.com/europe-west3.html
+region: europe-west3
+ip_cidr_range: 10.92.226.0/24
+description: Default subnet for CD
+secondary_ip_ranges:
+  pods: 10.186.0.0/20
+  services: 10.186.16.0/20

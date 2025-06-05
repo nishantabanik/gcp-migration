@@ -1,0 +1,22 @@
+argocd:
+  namespace: argocd
+
+teamRepos:
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "1000"
+  repoAnnotations:
+    notifications.argoproj.io/subscribe.on-fixed.gitlab: ""
+    notifications.argoproj.io/subscribe.on-sync-failed.gitlab: ""
+    notifications.argoproj.io/subscribe.on-progressing.gitlab: ""
+  repos:
+    - name: IDP Playground
+      repoUrl: 'git@gitlab.com:tbenning/idp-playground.git'
+
+computeInstance:
+  image: debian-cloud/debian-12
+  machineType: e2-micro
+  subnetwork: projects/psi-de-0-dev-net-spoke-0/regions/europe-west3/subnetworks/dev-default-ew3
+  region: europe-west3
+  zone: europe-west3-a
+  providerConfigRefName: gcp-provider-config

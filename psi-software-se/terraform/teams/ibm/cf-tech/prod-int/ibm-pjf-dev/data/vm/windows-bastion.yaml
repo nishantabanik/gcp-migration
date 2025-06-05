@@ -1,0 +1,9 @@
+backup_plan: "vm-backup"
+boot_disk:
+  auto_delete: false
+  image: "family/windows-2025"
+  size: 100
+deletion_protection: true
+description: "Windows Bastion host used for tests during migration from IBM to GCP"
+dns_name: "windows-bastion"
+instance_type: "e2-standard-4"

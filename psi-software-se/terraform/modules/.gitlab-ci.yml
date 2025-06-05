@@ -1,0 +1,10 @@
+image: cyclenerd/cloud-tools-container:latest
+
+stages:
+  - fmt
+
+fmt:
+  stage: fmt
+  script:
+    - echo "Terraform format check"
+    - terraform fmt -recursive -check -diff

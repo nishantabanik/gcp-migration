@@ -1,0 +1,13 @@
+unique_id: CSFB3UTYXME1IX8Q
+description: scada-core-ui
+merge_pipelines_enabled: true
+merge_trains_enabled: false # enable it after .gitlab-ci.yml is introduced
+squash_commit_template: |
+  %{title}
+  
+  %{description}
+initialize_with_readme: false
+
+# push rules
+branch_name_regex: (feature|bugfix)\/[A-Z]+-\d+(?:[_-]\S+)?
+commit_message_regex: ^(?:(Revert|Reapply) ")?(?:[A-Z]+-\d+ )+(?:[A-Z].+)(?:\n\n\S+(?:.|\n)+[\S])?

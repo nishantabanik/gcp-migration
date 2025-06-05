@@ -1,0 +1,136 @@
+# Copyright 2023-2024 Slalom GmbH
+# Copyright 2022 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Slalom: CI/CD with own optimized container image
+
+steps:
+  - name: 'cyclenerd/cloud-tools-container:latest'
+    id: info
+    entrypoint: bash
+    args:
+    - -c
+    - |-
+      echo
+      echo 'Trigger        : $${TRIGGER_NAME}'
+      echo 'Cloud Build ID : $${BUILD_ID}'
+      echo 'Commit SHA     : $${COMMIT_SHA}'
+
+  - name: 'cyclenerd/cloud-tools-container:latest'
+    id: format
+    entrypoint: bash
+    args:
+    - -c
+    - |-
+      terraform fmt -recursive -check /workspace/ || exit 9
+      echo "OK"
+
+  - name: 'cyclenerd/cloud-tools-container:latest'
+    id: files
+    entrypoint: bash
+    args:
+    - -c
+    - |-
+      echo "Download TF provider..."
+      gcloud storage cp "gs://$${_FAST_OUTPUTS_BUCKET}/providers/$${_TF_PROVIDERS_FILE}" "$${_TF_PROVIDERS_FILE}" || exit 9
+      echo "Download TF variables..."
+      for f in $${_TF_VAR_FILES}; do
+        gcloud storage cp "gs://$${_FAST_OUTPUTS_BUCKET}/tfvars/$f" "$f" || exit 9
+      done
+      echo "Download generated TF execution plan... (can fail)"
+      gcloud storage cp "gs://${build_log_bucket}/$${TRIGGER_NAME}_$${_APPLY_ID}_$${COMMIT_SHA}.out" "plan.out"
+      echo "List files..."
+      ls -lah
+      echo "OK"
+
+  - name: 'cyclenerd/cloud-tools-container:latest'
+    id: init
+    entrypoint: bash
+    args:
+    - -c
+    - |-
+      git config --global credential.'https://source.developers.google.com'.helper gcloud.sh || exit 9
+      terraform init -no-color || exit 9
+      echo "OK"
+
+  - name: 'cyclenerd/cloud-tools-container:latest'
+    id: validate
+    entrypoint: bash
+    args:
+    - -c
+    - |-
+      terraform validate -no-color || exit 9
+      tfsec --no-color             || exit 9
+      tflint --no-color            || exit 9
+      echo "OK"
+
+  - name: 'cyclenerd/cloud-tools-container:latest'
+    id: terraform
+    entrypoint: bash
+    args:
+    - -c
+    - |-
+      if echo "$${_APPLY_ID}" | grep '[[:alnum:]]'; then
+        echo "Apply!"
+        echo
+        echo "Commit SHA : $${COMMIT_SHA}"
+        echo "Apply ID   : $${_APPLY_ID}"
+        echo
+        if [ -f "plan.out" ]; then
+          echo "Apply generated TF execution plan..."
+          terraform apply -no-color -input=false -auto-approve "plan.out" || exit 9
+        else
+          echo "Error: Generated TF execution plan not found!"
+          exit 9
+        fi
+      else
+        echo "Generate TF execution plan..."
+        terraform plan -no-color -input=false -out "plan.out" || exit 9
+        gcloud storage cp "plan.out" "gs://${build_log_bucket}/$${TRIGGER_NAME}-apply_$${BUILD_ID}_$${COMMIT_SHA}.out" || exit 9
+        echo
+        echo "TF execution plan successfully created. Continue with applying the execution plan."
+        echo
+        echo "Use the following values to run the build trigger:"
+        echo
+        echo "Build Trigger : $${TRIGGER_NAME}-apply"
+        echo "Commit SHA    : $${COMMIT_SHA}"
+        echo "Apply ID      : $${BUILD_ID}"
+        echo
+        echo "Google Cloud CLI command:"
+        echo
+        echo "gcloud builds triggers run '$${TRIGGER_NAME}-apply' --sha='$${COMMIT_SHA}' --substitutions='_APPLY_ID=$${BUILD_ID}' --region='$${LOCATION}' --project='$${PROJECT_ID}'"
+        echo
+      fi
+      echo "OK"
+
+  # Slalom: For safety, the apply step is commented out.
+  #         If you are sure that the plan works remove the comment.
+  #- name: 'cyclenerd/cloud-tools-container:latest'
+  #  id: apply
+  #  entrypoint: bash
+  #  args:
+  #  - -c
+  #  - |-
+  #    terraform apply -no-color -input=false -auto-approve "plan.out"
+
+# Slalom: Cloud Storage bucket to store build logs
+logsBucket: 'gs://${build_log_bucket}'
+options:
+  env:
+    - PATH=/usr/local/bin:/usr/bin:/bin:/builder/home/.local/bin
+  logging: GCS_ONLY
+substitutions:
+  _FAST_OUTPUTS_BUCKET: ${outputs_bucket}
+  _TF_PROVIDERS_FILE: ${tf_providers_file}
+  _TF_VAR_FILES: ${tf_var_files == [] ? "''" : join("\n    ", tf_var_files)}

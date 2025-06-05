@@ -1,0 +1,4 @@
+unique_id: csf-incubator-ee-control-data
+description: ee-control-data
+merge_pipelines_enabled: true
+merge_trains_enabled: true

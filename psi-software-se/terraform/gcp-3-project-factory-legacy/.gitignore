@@ -1,0 +1,33 @@
+# Intellij
+.idea/
+*.iml
+*.iws
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# common
+*.log
+
+# terraform
+.terraform*
+*.tfstate
+terraform.tfstate.backup
+**/.terraform
+**/terraform.tfstate*
+**/terraform.tfvars.json
+**/terraform-*.auto.tfvars.json
+**/globals.auto.tfvars.json
+**/*.auto.tfvars
+**/.terraform.tfstate.lock.info
+**/.terraform.lock.hcl
+**/[0-9]*providers.tf
+**/[0-9]*.auto.tfvars*
+
+
+# various
+.DS_Store
+credentials.json
+key.json

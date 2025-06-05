@@ -1,0 +1,4 @@
+unique_id: csf-incubator-cgmes-data
+description: cgmes-data
+merge_pipelines_enabled: true
+merge_trains_enabled: true

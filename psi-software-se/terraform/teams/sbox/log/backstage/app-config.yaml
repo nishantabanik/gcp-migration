@@ -1,0 +1,83 @@
+app:
+  title: PSI Logistics Backstage App
+  baseUrl: http://localhost:3000
+
+organization:
+  name: PSI Logistics
+
+backend:
+  baseUrl: http://localhost:7007
+  listen:
+    port: 7007
+  csp:
+    connect-src: ["'self'", 'http:', 'https:']
+    upgrade-insecure-requests: false # temporary sollution before ACME service will be ready
+    # Content-Security-Policy directives follow the Helmet format: https://helmetjs.github.io/#reference
+    # Default Helmet Content-Security-Policy values can be removed by setting the key to false
+  cors:
+    origin: http://localhost:3000
+    methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
+    credentials: true
+  database:
+    client: better-sqlite3
+    connection: ':memory:'
+  # Used for enabling authentication, secret is shared by all backend plugins
+  # See https://backstage.io/docs/auth/service-to-service-auth for
+  # information on the format
+  # auth:
+  #   keys:
+  #     - secret: ${BACKEND_SECRET}
+integrations:
+  gitlab:
+    - host: gitlab.com
+      token: ${GITLAB_TOKEN}
+      apiBaseUrl: https://gitlab.com/api/v4
+      baseUrl: https://gitlab.com
+
+proxy:
+techdocs:
+  builder: 'local'
+  generator:
+    runIn: 'local'
+  publisher:
+    type: 'local'
+auth:
+  environment: development
+  providers:
+    guest: {}
+scaffolder:
+catalog:
+  import:
+    entityFilename: catalog-info.yaml
+    pullRequestBranchName: backstage-integration
+  rules:
+    - allow: [Component, System, API, Resource, Location, Template]
+  locations:
+    # Local example data, file locations are relative to the backend process, typically `packages/backend`
+    - type: file
+      target: ./local-catalog/catalog-info.yaml
+    - type: file
+      target: ./org/org.yaml
+      rules:
+        - allow: [User, Group]
+    - type: file
+      target: ./template/template-wms-server-config.yaml
+      rules:
+        - allow: [Template]
+    
+    - type: file
+      target: ./template/skeleton/wms-server-config.yaml
+
+    - type: file
+      target: ./techdocs/catalog-info.yaml
+
+kubernetes:
+  serviceLocatorMethod:
+    type: 'multiTenant'
+  clusterLocatorMethods:
+    - type: 'config'
+      clusters: []
+permission:
+  enabled: true
+
+enableExperimentalRedirectFlow: true

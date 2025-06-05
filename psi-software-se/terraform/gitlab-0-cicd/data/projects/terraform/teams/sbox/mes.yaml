@@ -1,0 +1,5 @@
+unique_id: sbox-mes
+description: Team MES
+access_groups:
+  organization/mes/app-gcp-sbox-mes-admins: developer
+  organization/mes/app-gcp-sbox-mes: reporter

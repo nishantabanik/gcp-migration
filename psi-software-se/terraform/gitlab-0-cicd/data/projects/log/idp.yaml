@@ -1,0 +1,12 @@
+unique_id: log-logistic
+description: idp
+squash_option: default_off
+
+access_tokens:
+  - name: push-token
+    variable_name: GITLAB_PUSH_TOKEN
+    description: Push token for GitLab CI
+    access_level: maintainer
+    protected: false
+    scopes:
+      - write_repository

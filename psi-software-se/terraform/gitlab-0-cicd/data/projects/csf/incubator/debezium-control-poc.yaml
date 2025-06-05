@@ -1,0 +1,4 @@
+unique_id: csf-incubator-debezium-control-poc
+description: debezium-control-poc
+merge_pipelines_enabled: true
+merge_trains_enabled: true

@@ -1,0 +1,10 @@
+unique_id: gcp-2-networking
+description: FAST networking management.
+access_groups:
+  organization/app-gitlab-its: developer
+  organization/leg-ibm/app-gcp-legacy-network-viewers: reporter
+
+protected_branches:
+  - name: main
+    push_access_level: no one
+    merge_access_level: maintainer

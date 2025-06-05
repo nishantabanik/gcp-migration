@@ -1,0 +1,5 @@
+name: gem
+description: GEM team
+access_groups:
+  organization/leg-ibm/app-gcp-legacy-ibm-gem-admin: developer
+  organization/leg-ibm/app-gcp-legacy-ibm-pem-admin: developer

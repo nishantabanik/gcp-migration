@@ -1,0 +1,12 @@
+apiVersion: v2
+name: log-idp-platform
+version: 0.2.0
+description:  A Helm chart for deploying all required parts of the Logistics Internal Developer Platform (IDP).
+
+dependencies:
+  - name: crossplane
+    version: "1.18"
+    repository: "https://charts.crossplane.io/stable/"
+  - name: cloudnative-pg
+    version: "0.23.0"
+    repository: "https://cloudnative-pg.github.io/charts/"

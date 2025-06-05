@@ -1,0 +1,5 @@
+unique_id: XA7I587X0ZO8ITS0
+description: Team ITS
+access_groups:
+  organization/its/app-gcp-sbox-its-admins: developer
+  organization/its/app-gcp-sbox-its: reporter

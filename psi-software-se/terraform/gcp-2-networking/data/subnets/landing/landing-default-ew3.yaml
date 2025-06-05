@@ -1,0 +1,6 @@
+# skip boilerplate check
+
+# Slalom: Frankfurt (europe-west3)
+region: europe-west3
+ip_cidr_range: 10.92.0.0/24
+description: Default subnet for landing

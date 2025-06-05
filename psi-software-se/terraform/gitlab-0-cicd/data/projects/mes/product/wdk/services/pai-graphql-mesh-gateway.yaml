@@ -1,0 +1,4 @@
+unique_id: mes-product-wdk-services-pai-graphql-mesh-gateway
+description: pai-graphql-mesh-gateway
+merge_pipelines_enabled: true
+merge_trains_enabled: false

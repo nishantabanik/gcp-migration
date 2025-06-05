@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Internal Developer Platform</title>
+<link rel="stylesheet" href="styles.css">
+
+<header>
+    <h1>Welcome to the Internal Developer Platform</h1>
+    <p>Your hub for tools, documentation, and resources
+</header>
+
+<nav>
+    <ul>
+        <li><a href="#home">Home</a>
+        <li><a href="#vision">Product Vision</a>
+        <li><a href="#getting-started">Getting Started</a>
+        <li><a href="#resources">Resources</a>
+        <li><a href="#why-use-idp">Why use IDP</a>
+        <li><a href="#support">Support</a>
+    </ul>
+</nav>
+
+<main>
+    <section id="home">
+        <h2>What is an Internal Developer Platform?</h2>
+        <p>
+            An Internal Developer Platform (IDP) is a central <a href="https://en.wikipedia.org/wiki/Computing_platform">platform</a>
+            that enables developers to access the tools, resources, and environments they need to build, test, and deploy
+            applications efficiently. Our IDP is designed to provide a unified and simplified experience, streamlining
+            workflows and enhancing collaboration across teams.
+    </section>
+
+    <section id="vision">
+        <h2>Our Product Vision</h2>
+        <p>
+            We envision an environment where software development cycles are fast, reliable, and scalable, 
+            supported by a culture of experimentation, continuous improvement, and a streamlined developer experience.
+        <p>
+            To achieve this, we intend to build an internal development platform (IDP) that serves as a centralized, 
+            self-service interface for developers, enabling them to focus on delivering value without the burden of 
+            operational complexity. This platform will unify tools, processes, and best practices, creating a streamlined 
+            and highly efficient development workflow.
+        <p>An IDP will improve operations by:
+        <ol>
+            <li>
+                <strong>Accelerating Development Cycles</strong><br>
+                By providing on-demand environments, reusable templates, and pre-configured resources, the platform will 
+                eliminate repetitive tasks, reduce setup time, and enable rapid iteration from idea to deployment.
+            <li>
+                <strong>Promoting Automation and Reproducibility</strong><br>
+                The IDP will emphasize automation, reducing the risk of human error and increasing consistency. Automated 
+                CI/CD pipelines, infrastructure-as-code templates, and self-healing mechanisms will ensure scalability and 
+                reliability.
+            <li>
+                <strong>Driving Innovation through Experimentation</strong><br>
+                By enabling easy provisioning of isolated environments, the platform will allow developers to test ideas safely 
+                and quickly.
+            <li>
+                <strong>Supporting Continuous Improvement</strong><br>
+                Usage insights and feedback will drive the platform's evolution to meet developers' and organizational needs. 
+                Metrics and KPIs will help identify bottlenecks and areas for refinement.
+            <li>
+                <strong>Ensuring scalability</strong><br>
+                Through a scalable platform that can grow with the organization, enabling rapid deployment of new teams and ensuring 
+                that all teams have access to the same tools and services.
+        </ol>
+        <br>
+        <p>
+            By aligning with the right principles and focusing on the developer experience, this platform will become the foundation 
+            of technological excellence for our organization. It will not only increase operational efficiency and reliability but also 
+            cultivate a culture of experimentation, innovation, and satisfaction—enthusing both customers and employees.
+    </section>
+
+    <section id="getting-started">
+        <h2>Getting Started</h2>
+        <p>To start using the platform, explore our guidelines and documentation. Currently, this platform is being populated with essential resources and tools for developers. Stay tuned for updates!
+        <p> Our Platform is available under: <a href="http://idp.log.dev.gcp.psi.de/">idp.log.dev.gcp.psi.de</a>
+    </section>
+
+    <section id="resources">
+        <h2>Resources &amp; Documentation</h2>
+        <p>Below you will find links to our team's services and documentation.
+        <ul>
+            <li><a href="http://argocd.log.dev.gcp.psi.de/">ArgoCD</a>, a <a href="https://en.wikipedia.org/wiki/DevOps#GitOps">GitOps</a> service
+        </ul>
+    </section>
+
+    <section id="why-use-idp">
+        <h2>Why Should You Use Our IDP As Developer?</h2>
+        <p>Our Internal Developer Platform (IDP) makes software development faster, more efficient, and hassle-free.
+            Instead of dealing with infrastructure, permissions, or manual workflows, you can focus on what truly matters:
+            <strong>writing code and delivering value.</strong>
+
+        <h3>Key Benefits at a Glance:</h3>
+        <ul>
+            <li><strong>✅ Fast Provisioning</strong> – Launch new projects and deploy services in minutes instead of hours or days.
+            <li><strong>✅ Reduced Operational Overhead</strong> – No manual infrastructure setup, no unnecessary waiting times.
+            <li><strong>✅ Standardized Best Practices</strong> – Unified processes ensure stability, security, and efficiency.
+            <li><strong>✅ Transparency &amp; Traceability</strong> – Always have full visibility into your services and their status.
+            <li><strong>✅ Self-Service &amp; Autonomy</strong> – Develop independently without relying on other teams or waiting for approvals.
+            <li><strong>✅ Scalability &amp; Future-Proofing</strong> – The platform grows with your needs without additional management overhead.
+        </ul>
+        <br>
+
+        <h3>Example</h3>
+        <p>Imagine you can create a WMS server on the Google Cloud Platform with a few clicks on our frontend, or a few lines of code, like in this imaginary example:
+        <div class="code-container">
+            <code>
+apiVersion: wms.log.psi.de/v1alpha1
+kind: WmsServerHost
+metadata:
+    name: wms-server-host-test
+spec:
+    size: small
+    enableSsh: true  </code>
+        </div>
+        <p>This is a YAML configuration file. Specifically, it appears to be a custom resource definition (CRD) for a Kubernetes-like system, used to define a "WmsServerHost" instance. Below, we break it down step by step.
+        <p><span class="highlight">apiVersion</span>: Specifies the version of the API handling this resource.
+        <p><span class="highlight">kind</span>: Declares that this resource is a <em>WmsServerHost</em>, which is likely a virtual machine.
+        <p><span class="highlight">metadata</span>: Provides a unique name for this resource
+        <p><span class="highlight">spec</span>: Contains configuration details
+        <p><span class="highlight">size: small</span> → The server is a small instance, likely with limited CPU and memory.
+        <p><span class="highlight">enableSsh: true</span> → SSH access is enabled, allowing remote login.
+
+        <p>This setup provisions a VM in Google Cloud along with an <a href="https://cloud.google.com/load-balancing/docs/l7-internal?hl=en#regional">internal load balancer</a>. The seamless operation of the actual VM is implemented centrally, so you don't have to care about all the underlying components, like Instance Templates, Managed Instance Groups, Backend Services, URL Maps, Target HTTP(S) Proxies, Forwarding Rules, and more.
+
+        <h3>How It Works</h3>
+        <img src="developer-workflow.jpg" alt="Infrastructure Automation Diagram">
+        <p class="caption">Diagram: Developer workflow with GitOps and IDP.</p>
+        <p>Developers have two ways to create the configuration file:</p>
+        <ul>
+            <li><strong>Manual Creation</strong> – Writing the file themselves.</li>
+            <li><strong>Automated Generation</strong> – Using our frontend to create it effortlessly.</li>
+        </ul>
+        <p>
+            Regardless of the method, the configuration file is stored in the
+            <strong>same Git repository</strong> where developers manage their code — not a separate system.
+            Git tracks changes to the file just like any other project asset.
+        </p>
+        <p>
+            Once the file is in place, our system continuously monitors the repository. Any updates trigger
+            an automated process that <strong>provisions, updates, or removes infrastructure as needed—
+            without manual intervention.</strong>
+        </p>
+        <p><em>(More details on the file’s exact location will be covered shortly.)</em></p>
+        <br>
+        <p>Our IDP is your key to a seamless, efficient, and modern software development experience. <strong>Try it out and see how much smoother your workflow can be! 🚀</strong>
+    </section>
+
+
+    <section id="support">
+        <h2>Support</h2>
+        <p>If you have any questions or need help, please contact our support team at <a href="mailto:support@bestteamintheworld.com">support@bestteamintheworld.com</a>.
+    </section>
+</main>
+
+<footer>
+    <p>&copy; 2024 PSI Software SE. All rights reserved.
+</footer>

@@ -1,0 +1,10 @@
+---
+services:
+  backstage:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      NODE_ENV: development
+    ports:
+      - "7007:7007"

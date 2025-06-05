@@ -1,0 +1,6 @@
+gcp_project_id          = "psi-de-0-sbox-mes-tools"
+gcp_region              = "europe-west3"
+gcp_zone                = "europe-west3-a"
+gcp_network             = "vpc"
+gcp_subnetwork          = "vpc-subnet-1-ew3"
+swp_internet_access_tag = "internet-via-swp"

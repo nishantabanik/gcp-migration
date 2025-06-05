@@ -1,0 +1,56 @@
+###### Group config ######
+# https://registry.terraform.io/providers/gitlabhq/gitlab/latest/docs/resources/group
+# Groups can be nested, up to 8 levels. Each nested directory needs own _group.yaml file.
+
+# (Optional) Name of the GitLab group
+# Type: String
+# Default: name of directory where this file name is stored
+name: complex-gitlab-group
+
+# (Optional) Description of GitLab group
+# Type: String
+# Default: Description for {directoryName} (TF managed)
+description: Example git configurations
+
+# (Optional) Prevent sharing a project with another group within this group.
+# Type: Boolean
+# Default: false
+share_with_group_lock: false
+
+# (Optional) An array of access levels allowed to push to first default protected branch created when project is initialized.
+# Type: List of values from: developer, maintainer, no one
+# Default: [ "maintainer" ]
+allowed_to_push: [ "maintainer" ]
+
+# (Optional) Allow force push. Affects only first default protected branch created when project is initialized.
+# Type: Boolean
+# Default: false
+allow_force_push: false
+
+# (Optional) An array of access levels allowed to push to first default protected branch created when project is initialized.
+# Type: List of values from: developer, maintainer, no one
+# Default: [ "developer", "maintainer" ]
+allowed_to_merge: [ "developer", "maintainer" ]
+
+# (Optional) Allow developers to initial push to first default protected branch created when project is initialized.
+# Type: Boolean
+# Default: true
+developer_can_initial_push: true
+
+
+###### Share groups ######
+# https://registry.terraform.io/providers/gitlabhq/gitlab/latest/docs/resources/group_share_group
+
+# (Optional) Share this group with a group
+# Type: Object
+# Default: null
+# Syntax:
+#access_groups:
+#  {group}: {role}
+
+# Roles:
+# no one, minimal, guest, planner, reporter, developer, maintainer, owner
+
+# Example:
+access_groups:
+  organization/cft/app-gcp-cft: developer

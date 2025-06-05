@@ -1,0 +1,7 @@
+gcp_project_id = "psi-de-0-ibm-pjf-dev"
+gcp_region     = "europe-west3"
+gcp_zone       = "europe-west3-a"
+gcp_network    = "projects/psi-de-0-legacy-net-spoke-0/global/networks/legacy-spoke-0"
+gcp_subnetwork = "projects/psi-de-0-legacy-net-spoke-0/regions/europe-west3/subnetworks/legacy-cd-ew3"
+gcp_domain     = "legacy.gcp.psi.de"
+gcp_subdomain  = "pjf"

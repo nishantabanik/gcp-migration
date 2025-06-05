@@ -1,0 +1,4 @@
+name: cf-fin
+description: CF-FIN team
+access_groups:
+  organization/leg-ibm/app-gcp-legacy-ibm-cf-fin-admin: developer

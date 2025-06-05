@@ -1,0 +1,5 @@
+unique_id: 6ANC49KD7GNPJFC0
+description: Team PJF Classic - POC
+access_groups:
+  organization/pjfc-poc/app-gcp-sbox-pjfc-poc-admins: developer
+  organization/pjfc-poc/app-gcp-sbox-pjfc-poc: reporter

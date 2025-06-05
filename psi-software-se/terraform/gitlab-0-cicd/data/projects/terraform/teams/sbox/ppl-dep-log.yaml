@@ -1,0 +1,5 @@
+unique_id: sbox-ppl-dep-log
+description: Team PPL-DEP-LOG
+access_groups:
+  organization/ppl-dep-log/app-gcp-sbox-ppl-dep-log-admins: developer
+  organization/ppl-dep-log/app-gcp-sbox-ppl-dep-log: reporter

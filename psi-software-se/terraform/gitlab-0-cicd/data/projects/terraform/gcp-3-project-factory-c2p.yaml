@@ -1,0 +1,11 @@
+unique_id: gcp-3-project-factory-c2p
+description: FAST project factory c2p.
+access_groups:
+# keep ordered alphabetically
+  organization/app-gitlab-slalom: developer
+  organization/cft/app-gcp-cft: developer
+
+protected_branches:
+  - name: main
+    push_access_level: no one
+    merge_access_level: developer

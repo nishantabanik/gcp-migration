@@ -1,0 +1,13 @@
+name: examples
+description: Example Applications
+access_groups:
+  organization/csf/app-gcp-sbox-csf: reporter
+  organization/csf/app-gcp-sbox-csf-admins: reporter
+  organization/iai/app-gcp-sbox-iai: reporter
+  organization/iai/app-gcp-sbox-iai-admins: reporter
+  organization/log/app-gcp-sbox-log: reporter
+  organization/log/app-gcp-sbox-log-admins: reporter
+  organization/mes/app-gcp-sbox-mes: reporter
+  organization/mes/app-gcp-sbox-mes-admins: reporter
+  organization/xref/app-gcp-sbox-xref: reporter
+  organization/xref/app-gcp-sbox-xref-admins: reporter

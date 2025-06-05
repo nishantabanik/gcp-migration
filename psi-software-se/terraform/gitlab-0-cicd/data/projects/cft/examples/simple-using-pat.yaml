@@ -1,0 +1,11 @@
+unique_id: simple-using-pat
+description: "Example: using Project Access Token in GitLab CI to interact with repository"
+
+access_tokens:
+  - name: push-token
+    variable_name: GITLAB_PUSH_TOKEN
+    description: Push token for GitLab CI
+    access_level: maintainer
+    protected: false
+    scopes:
+      - write_repository

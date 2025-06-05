@@ -1,0 +1,7 @@
+unique_id: test-gcp-2-security
+description: FAST security management.
+
+protected_branches:
+  - name: main
+    push_access_level: no one
+    merge_access_level: maintainer

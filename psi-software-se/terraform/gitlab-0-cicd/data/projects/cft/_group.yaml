@@ -1,0 +1,4 @@
+name: cft
+description: CFT
+access_groups:
+  organization/cft/app-gcp-cft: developer

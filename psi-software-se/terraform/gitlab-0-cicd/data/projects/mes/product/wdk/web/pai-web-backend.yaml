@@ -1,0 +1,4 @@
+unique_id: mes-product-wdk-web-pai-web-backend
+description: pai-web-backend
+merge_pipelines_enabled: true
+merge_trains_enabled: false

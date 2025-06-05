@@ -1,0 +1,32 @@
+workflow:
+  rules:
+    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
+      variables:
+        COMMAND: apply -auto-approve
+    - when: always
+      variables:
+        COMMAND: plan -lock=false
+
+stages:
+  - test
+  - tf-plan-apply
+
+tf-plan-apply:
+  stage: tf-plan-apply
+  image:
+    name: hashicorp/terraform
+    entrypoint:
+      - "/usr/bin/env"
+  script:
+    - |
+      ssh-agent -a /tmp/ssh_agent.sock
+      mkdir -p ~/.ssh
+      ssh-keyscan -H 'gitlab.com' >> ~/.ssh/known_hosts
+      ssh-keyscan gitlab.com | sort -u - ~/.ssh/known_hosts -o ~/.ssh/known_hosts
+    - terraform init -backend-config="username=gitlab-ci-token" -backend-config="password=${CI_JOB_TOKEN}"
+    - terraform validate
+    - terraform test
+    - terraform $COMMAND -input=false -no-color
+
+include:
+  - template: Jobs/Secret-Detection.gitlab-ci.yml

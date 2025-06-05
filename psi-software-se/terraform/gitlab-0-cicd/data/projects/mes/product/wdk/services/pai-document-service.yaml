@@ -1,0 +1,4 @@
+unique_id: mes-product-wdk-services-pai-document-service
+description: pai-document-service
+merge_pipelines_enabled: true
+merge_trains_enabled: false

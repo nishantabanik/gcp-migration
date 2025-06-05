@@ -1,0 +1,12 @@
+# Slalom: Allow only resource locations within European Union (EU)
+# Please note:
+#   European Union (EU) is not Europe!
+#   I.e. europe-west2 (London) and europe-west6 (Zurich) are in Europe
+#   but not in the European Union (EU)
+# More help:
+# https://cloud.google.com/resource-manager/docs/organization-policy/defining-locations
+gcp.resourceLocations:
+  rules:
+  - allow:
+      values:
+      - in:eu-locations

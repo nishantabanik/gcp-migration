@@ -1,0 +1,114 @@
+# "gem/non-prod-ext" = "folders/358613780785"
+folder_id: folders/358613780785
+
+# [opt] Contacts for billing alerts and important notifications - merged with the ones defined in defaults
+essential_contacts:
+  - prostecki@psi.de
+  - jglazik@psi.de
+  - jchodubski@psi.de
+
+# [opt] CICD config for WIF and service account. GitLab project name specified as [[GITLAB_PROJECT]] can be created afterwards.
+cicd:
+  repository: psi-software-se/terraform/teams/ibm/gem/non-prod-ext/dev
+  sa_roles:
+    - roles/owner
+    - roles/artifactregistry.admin
+    - roles/container.admin
+    - roles/compute.admin
+
+# Projects should define mandatory labels (environment, owner, creator, team)
+labels:
+  environment: development
+  owner: gcp-team-its
+  creator: wszwed
+  team: gem
+  application: ibm-gem-dev
+
+# [opt] Service account to create for the project and their roles on the project
+# in name => [roles] format
+service_accounts:
+  kubernetes-sa-all:
+    - roles/container.defaultNodeServiceAccount
+  compute-sa-command:
+    - roles/logging.logWriter
+    - roles/monitoring.metricWriter
+  compute-sa-pcom:
+    - roles/logging.logWriter
+    - roles/monitoring.metricWriter
+  compute-sa-prins:
+    - roles/logging.logWriter
+    - roles/monitoring.metricWriter
+  compute-sa-wi:
+    - roles/logging.logWriter
+    - roles/monitoring.metricWriter
+
+
+# [opt] Authoritative IAM bindings in group => [roles] format
+#         Overview of all roles: https://gcloud-iam.nkn-it.de/
+group_iam:
+  app-gcp-legacy-ibm-gem-admin@psi.de:
+    - roles/admin
+  app-gcp-legacy-ibm-cf-its-admin@psi.de:
+    - roles/admin
+  app-gcp-cft@psi.de:
+    - roles/admin
+
+# [opt] Org policy overrides defined at project level
+org_policies:
+  gcp.resourceLocations:
+    rules:
+    - allow:
+        values:
+        - in:europe-west3-locations
+        - in:europe-west4-locations
+  # Slalom: Disallow own WIF providers. Projects should use central WIF providers from *-prod-iac-core-0 project.
+  iam.workloadIdentityPoolProviders:
+    rules:
+    - deny:
+        all: true
+  iam.workloadIdentityPoolAwsAccounts:
+    rules:
+    - deny:
+        all: true
+  iam.disableServiceAccountKeyCreation:
+    rules:
+      - enforce: false
+  iam.disableServiceAccountKeyUpload:
+    rules:
+      - enforce: false
+  compute.vmExternalIpAccess:
+    rules:
+      - allow:
+          all: true
+  compute.restrictLoadBalancerCreationForTypes:
+    rules:
+      - allow:
+          all: true
+  run.allowedIngress:
+    rules:
+      - allow:
+          values:
+            - is:internal-and-cloud-load-balancing      
+
+# [opt] VPC setup
+vpc:
+  # Host project the project will be service project of
+  host_project: psi-de-0-legacy-net-spoke-0
+
+  # [opt] If set, enables the container API
+  gke_setup:
+    # Grants "roles/container.hostServiceAgentUser" to the container robot if set
+    enable_host_service_agent: true
+    # Slalom:
+    # Do not grant "roles/compute.securityAdmin" to the container robot
+    # Do not allow managing firewall resources from the service project GKE service account
+    enable_security_admin: false
+
+  # [opt] Subnets in the host project where principals will be granted networkUser
+  # in region/subnet-name => [principals]
+  subnets_iam:
+    europe-west3/legacy-gem-ew3:
+      - group:app-gcp-legacy-ibm-gem-admin@psi.de
+
+dns_zones:
+  - gem

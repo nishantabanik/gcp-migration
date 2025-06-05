@@ -1,0 +1,57 @@
+# [opt] Contacts for billing alerts and important notifications - merged with the ones defined in defaults
+essential_contacts:
+  - jpietka@psi.de
+  - plebedynski@psi.de
+  - sniemiec@psi.de
+
+# [opt] CICD config for WIF and service account. GitLab project name specified as [[GITLAB_PROJECT]] can be created afterwards.
+cicd:
+  repository: psi-software-se/terraform/teams/sbox/pjfc-poc
+  sa_roles:
+    - roles/editor
+    - roles/artifactregistry.admin    
+
+# Projects should define mandatory labels (environment, owner, creator, team)
+labels:
+  environment: sandbox
+  owner: gcp-team-pjfc-poc
+  creator: mnoworzyn
+  team: pjfc-poc
+  application: sandbox-pjfc-poc
+
+# [opt] Service account to create for the project and their roles on the project
+# in name => [roles] format
+service_accounts:
+  kubernetes-1:
+    - roles/container.defaultNodeServiceAccount
+  apps-sa:
+    - roles/logging.logWriter
+    - roles/artifactregistry.writer
+
+# [opt] Authoritative IAM bindings in group => [roles] format
+#         Overview of all roles: https://gcloud-iam.nkn-it.de/
+group_iam:
+  app-gcp-sbox-pjfc-poc-admins@psi.de:
+    - roles/admin
+  app-gcp-sbox-pjfc-poc@psi.de:
+    - roles/writer
+  app-gcp-cft@psi.de:
+    - roles/viewer
+
+# [opt] Org policy overrides defined at project level
+org_policies:
+  gcp.resourceLocations:
+    rules:
+    - allow:
+        values:
+        - in:europe-west3-locations
+        - in:europe-west4-locations
+  # Slalom: Disallow own WIF providers. Projects should use central WIF providers from *-prod-iac-core-0 project.
+  iam.workloadIdentityPoolProviders:
+    rules:
+    - deny:
+        all: true
+  iam.workloadIdentityPoolAwsAccounts:
+    rules:
+    - deny:
+        all: true

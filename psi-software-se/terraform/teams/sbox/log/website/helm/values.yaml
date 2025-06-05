@@ -1,0 +1,4 @@
+image:
+  repository: europe-west3-docker.pkg.dev/psi-de-0-sandbox-log/repo-container/de/psi/log/idp/website
+  pullPolicy: Always
+  tag: "0.1.0-170.42e64348"

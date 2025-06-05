@@ -1,0 +1,53 @@
+#To set Subgroup as Code Owners, invite this group directly to the project itself.
+#https://docs.gitlab.com/user/project/codeowners/advanced/#invite-subgroups-to-parent-groups
+* @psi-software-se/organization/app-gitlab-cft
+
+[CFT Team admins] @psi-software-se/organization/app-gitlab-cft @psi-software-se/organization/cft/app-gcp-cft
+/data/projects/cft/
+
+[PSIcommand Team admins] @psi-software-se/organization/app-gitlab-cft @psi-software-se/organization/command/app-gcp-sbox-command-admins
+/data/projects/command/
+
+[CSF Team admins] @psi-software-se/organization/app-gitlab-cft @psi-software-se/organization/csf/app-gcp-sbox-csf-admins
+/data/projects/csf/
+
+[GANESI Team admins] @psi-software-se/organization/app-gitlab-cft @psi-software-se/organization/ganesi/app-gcp-sbox-ganesi-admins
+/data/projects/csf/ganesi/
+
+[MES Team admins] @psi-software-se/organization/app-gitlab-cft @psi-software-se/organization/mes/app-gcp-sbox-mes-admins
+/data/projects/mes/
+
+[LOG Team admins] @psi-software-se/organization/app-gitlab-cft @psi-software-se/organization/log/app-gcp-sbox-log-admins
+/data/projects/log/
+
+[IAI Team admins] @psi-software-se/organization/app-gitlab-cft @psi-software-se/organization/iai/app-gcp-sbox-iai-admins
+/data/projects/iai/
+
+[XREF Team admins] @psi-software-se/organization/app-gitlab-cft @psi-software-se/organization/xref/app-gcp-sbox-xref-admins
+/data/projects/xref/
+
+[PJFC-POC Team admins] @psi-software-se/organization/app-gitlab-cft @psi-software-se/organization/pjfc-poc/app-gcp-sbox-pjfc-poc-admins
+/data/projects/pjfc-poc/
+
+[ITS Team admins] @psi-software-se/organization/app-gitlab-cft @psi-software-se/organization/its/app-gcp-sbox-its-admins
+/data/projects/its/
+/data/projects/terraform/teams/ibm/
+
+[Legacy IBM CF-FIN admins] @psi-software-se/organization/app-gitlab-cft @psi-software-se/organization/leg-ibm/app-gcp-legacy-ibm-cf-fin-admin
+/data/projects/terraform/teams/ibm/cf-fin/
+
+[Legacy IBM CF-IAI admins] @psi-software-se/organization/app-gitlab-cft @psi-software-se/organization/leg-ibm/app-gcp-legacy-ibm-cf-iai-admin
+/data/projects/terraform/teams/ibm/cf-iai/
+
+[Legacy IBM CF-ITS admins] @psi-software-se/organization/app-gitlab-cft @psi-software-se/organization/leg-ibm/app-gcp-legacy-ibm-cf-its-admin
+/data/projects/terraform/teams/ibm/cf-its/
+
+[Legacy IBM CF-TECH admins] @psi-software-se/organization/app-gitlab-cft @psi-software-se/organization/leg-ibm/app-gcp-legacy-ibm-cf-tech-admin
+/data/projects/terraform/teams/ibm/cf-tech/
+
+[Legacy IBM GEM admins] @psi-software-se/organization/app-gitlab-cft @psi-software-se/organization/leg-ibm/app-gcp-legacy-ibm-gem-admin
+/data/projects/terraform/teams/ibm/gem/
+/data/projects/legacy/gem/
+
+[Legacy IBM PEM admins] @psi-software-se/organization/app-gitlab-cft @psi-software-se/organization/leg-ibm/app-gcp-legacy-ibm-pem-admin
+/data/projects/terraform/teams/ibm/gem/

@@ -1,0 +1,4 @@
+unique_id: mes-tools-gitlab-ci-components-container-image-builder
+description: This project provides Gitlab CI/CD components for building Container Images with Kaniko and pushing, copying or tagging them with Crane.
+merge_pipelines_enabled: true
+merge_trains_enabled: false

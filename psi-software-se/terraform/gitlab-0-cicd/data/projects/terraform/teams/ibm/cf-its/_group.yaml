@@ -1,0 +1,4 @@
+name: cf-its
+description: CF-ITS team
+access_groups:
+  organization/leg-ibm/app-gcp-legacy-ibm-cf-its-admin: developer

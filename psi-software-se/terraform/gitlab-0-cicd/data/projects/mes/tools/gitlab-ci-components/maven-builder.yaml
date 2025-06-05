@@ -1,0 +1,4 @@
+unique_id: mes-tools-gitlab-ci-components-maven-builder
+description: pai-document-service
+merge_pipelines_enabled: true
+merge_trains_enabled: false

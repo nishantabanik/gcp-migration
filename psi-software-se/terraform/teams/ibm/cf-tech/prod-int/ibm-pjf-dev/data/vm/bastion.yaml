@@ -1,0 +1,8 @@
+backup_plan: "vm-backup"
+boot_disk:
+  auto_delete: false
+  size: 50
+deletion_protection: true
+description: "Linux bastion host"
+dns_name: "bastion"
+instance_type: "e2-medium"

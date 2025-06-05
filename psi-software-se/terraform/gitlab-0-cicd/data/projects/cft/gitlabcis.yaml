@@ -1,0 +1,8 @@
+unique_id: cft-gitlabcis
+description: CIS GitLab Benchmark Scanner
+
+protected_branches:
+  - name: main
+    push_access_level: maintainer
+    merge_access_level: maintainer
+    allow_force_push: true

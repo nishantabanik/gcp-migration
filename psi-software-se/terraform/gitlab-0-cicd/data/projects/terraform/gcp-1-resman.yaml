@@ -1,0 +1,7 @@
+unique_id: gcp-1-resman
+description: FAST resource management.
+
+protected_branches:
+  - name: main
+    push_access_level: no one
+    merge_access_level: maintainer

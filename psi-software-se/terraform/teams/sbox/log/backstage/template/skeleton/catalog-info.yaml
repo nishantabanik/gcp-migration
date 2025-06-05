@@ -1,0 +1,13 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: Component-for-${{ values.serverName }}
+  description: "Configuration for ${{ values.serverName }}"
+  annotations:
+    gitlab.com/project-slug: "${{ values.repoUrl }}"
+  tags:
+    - server-config
+spec:
+  type: service
+  lifecycle: production
+  owner: "user:guest"

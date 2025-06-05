@@ -1,0 +1,4 @@
+name: gem
+description: GEM DevOps repositories for legacy IBM environment
+access_groups:
+  organization/leg-ibm/app-gcp-legacy-ibm-gem-admin: developer

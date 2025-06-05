@@ -1,0 +1,36 @@
+global:
+  image:
+    registry: europe-west3-docker.pkg.dev/psi-de-0-sbox-csf/artifacts
+
+# based partially on https://medium.com/google-cloud/secure-your-nginx-ingress-controller-behind-cloud-armor-805d6109af86
+controller:
+  service:
+    type: ClusterIP
+    annotations:
+      cloud.google.com/neg: '{"exposed_ports": {"80":{"name": "gke-1-ingress-nginx-80-neg"}}}'
+  config:
+  # Nginx is running behind ELB so it needs to forward headers given by ELB
+    use-forwarded-headers: true
+  # additional security - nginx not running as root    
+  containerSecurityContext:
+    capabilities:
+      drop:
+        - ALL
+      add:
+        - NET_BIND_SERVICE
+    runAsUser: 101
+    runAsGroup: 101
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: false
+    runAsNonRoot: true
+    
+  # Ignore digests for images
+  # They are different than original 
+  # when images were retagged and pushed
+  # to the GCP artifact registry
+  image:
+    digest:
+  admissionWebhooks:
+    patch:
+      image:
+        digest:

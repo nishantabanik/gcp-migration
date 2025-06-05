@@ -1,0 +1,27 @@
+{{- if eq .Values.mode "production" -}}
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: {{ include "log-idp.fullname" . }}-db
+  labels:
+    {{- include "log-idp.labels" . | nindent 4 }}
+spec:
+  instances: {{ .Values.db.instances }}
+  imageName: {{ .Values.db.image }}
+  storage:
+    size: {{ .Values.db.storage.size }}
+  enableSuperuserAccess: true
+  # backups:
+  #   pgBaseBackup:
+  #     global:
+  #       destination: gs://your-backup-bucket-name/backups
+  #       gcsCredentials:
+  #         secretName: gcs-backup-secret
+  #       retentionPolicy:
+  #         retentionDays: 7
+  # monitoring:
+  #   enablePodMonitor: true
+  # tls:
+  #   selfSigned: true
+{{- end -}}

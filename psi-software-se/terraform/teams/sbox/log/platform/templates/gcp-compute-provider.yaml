@@ -1,0 +1,85 @@
+# We want to add the ControllerConfig, Provider and ProviderConfig during the installation of Crossplane.
+# Because the ControllerConfig needs some CRDs, which are not right there in the post-install step, we need to
+# wait a bit until they are created. The same is for the ProviderConfig which needs CRDs created by Provider
+# So the hook-weight here describe the order to be executed
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: wait-10-seconds
+  annotations:
+    helm.sh/hook: post-install
+    helm.sh/hook-weight: "1"
+spec:
+  template:
+    spec:
+      containers:
+        - name: wait-container
+          image: busybox:1.36
+          command: [ "sh", "-c", "echo 'Waiting for 10 seconds...'; sleep 10" ]
+      restartPolicy: Never
+  backoffLimit: 2
+---
+apiVersion: pkg.crossplane.io/v1beta1
+kind: DeploymentRuntimeConfig
+metadata:
+  name: gcp-compute
+  annotations:
+    helm.sh/hook: post-install
+    helm.sh/hook-weight: "2"
+spec:
+  serviceAccountTemplate:
+    metadata:
+      name: crossplane
+      annotations:
+        iam.gke.io/gcp-service-account: crossplane@psi-de-0-wms-tool-0.iam.gserviceaccount.com
+---
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: gcp-compute
+  annotations:
+    helm.sh/hook: post-install
+    helm.sh/hook-weight: "3"
+spec:
+  package: "xpkg.upbound.io/upbound/provider-gcp-compute:v1.9.0"
+  runtimeConfigRef:
+    name: gcp-compute
+---
+apiVersion: pkg.crossplane.io/v1
+kind: Function
+metadata:
+  name: function-patch-and-transform
+  annotations:
+    helm.sh/hook: post-install
+    helm.sh/hook-weight: "3"
+spec:
+  package: xpkg.upbound.io/crossplane-contrib/function-patch-and-transform:v0.1.4
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: wait-120-seconds
+  annotations:
+    helm.sh/hook: post-install
+    helm.sh/hook-weight: "4"
+spec:
+  template:
+    spec:
+      containers:
+        - name: wait-container
+          image: busybox:1.36
+          command: [ "sh", "-c", "echo 'Waiting for 120 seconds...'; sleep 120" ]
+      restartPolicy: Never
+  backoffLimit: 2
+---
+apiVersion: gcp.upbound.io/v1beta1
+kind: ProviderConfig
+metadata:
+  name: gcp-provider-config
+  annotations:
+    helm.sh/hook: post-install
+    helm.sh/hook-weight: "5"
+spec:
+  credentials:
+    source: InjectedIdentity
+  projectID: psi-de-0-wms-tool-0

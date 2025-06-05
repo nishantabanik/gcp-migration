@@ -1,0 +1,6 @@
+---
+minimum_severity: MEDIUM
+exclude:
+  # Slalom: We use the service accounts consciously and have extra policies
+  - google-iam-no-privileged-service-accounts
+  - google-iam-no-project-level-service-account-impersonation

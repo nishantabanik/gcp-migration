@@ -1,0 +1,163 @@
+variables:
+  GOOGLE_PROJECT: psi-de-0-sandbox-log
+  SERVICE_ACCOUNT: psi-de-0-sb-sandbox-log-1@psi-de-0-sandbox-log.iam.gserviceaccount.com
+  IMPERSONATE_SA: psi-de-0-sb-sandbox-log-0@psi-de-0-sandbox-log.iam.gserviceaccount.com
+  GOOGLE_CREDENTIALS: cicd-sa-credentials.json
+  WIF_PROVIDER: projects/504787948326/locations/global/workloadIdentityPools/psi-de-0-bootstrap/providers/psi-de-0-bootstrap-git-psi
+  SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+  REGION: europe-west3
+  COMMAND: plan
+  TARGET_VERSION: 0.1.0-${CI_PIPELINE_IID}.${CI_COMMIT_SHORT_SHA}
+
+.gcp_auth: &gcp_auth
+  - ./bin/gcloud_installer.sh
+  - export PATH=$PATH:$(pwd)/google-cloud-sdk/bin
+  - ./bin/gcloud_setup.sh "$GOOGLE_PROJECT" "$WIF_PROVIDER" "$GOOGLE_CREDENTIALS" "$SERVICE_ACCOUNT"
+  - gcloud config set auth/impersonate_service_account $IMPERSONATE_SA
+  - ./bin/setup_ssh.sh "$CICD_MODULES_KEY" "$SSH_AUTH_SOCK"
+
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
+      variables:
+        COMMAND: apply -auto-approve
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      variables:
+        COMMAND: plan -lock=false
+    - if: $CI_PIPELINE_SOURCE == "push"
+      variables:
+        COMMAND: plan -lock=false
+stages:
+  - gcp-setup
+  - parallel-tasks
+  - helm
+  - rollback
+  - bump-version
+gcp-setup:
+  stage: gcp-setup
+  image:
+    name: google/cloud-sdk:slim
+  artifacts:
+    paths:
+      - $GOOGLE_CREDENTIALS
+  id_tokens:
+    GITLAB_TOKEN:
+      aud: https://gitlab.com
+  before_script:
+    - echo "$GITLAB_TOKEN" > token.txt
+  script:
+    - ./bin/gcloud_setup.sh "$GOOGLE_PROJECT" "$WIF_PROVIDER" "$GOOGLE_CREDENTIALS" "$SERVICE_ACCOUNT"
+
+tf-plan-apply:
+  stage: parallel-tasks
+  dependencies:
+    - gcp-setup
+  image:
+    name: hashicorp/terraform
+    entrypoint:
+      - "/usr/bin/env"
+  id_tokens:
+    GITLAB_TOKEN:
+      aud: https://gitlab.com
+  before_script:
+    - echo "$GITLAB_TOKEN" > token.txt
+  script:
+    - ./bin/setup_ssh.sh "$CICD_MODULES_KEY" "$SSH_AUTH_SOCK"
+    - terraform init -backend-config="impersonate_service_account=$IMPERSONATE_SA"
+    - terraform validate
+    - terraform $COMMAND -input=false -no-color -var enable_impersonate_sa=true
+
+build-and-push-image:
+  stage: parallel-tasks
+  id_tokens:
+    GITLAB_TOKEN:
+      aud: https://gitlab.com
+  image: docker
+  variables:
+    SSH_AUTH_SOCK: /tmp/ssh-agent.sock
+    DOCKER_HOST: tcp://docker:2375  # Point to DinD service
+    REGISTRY: "${REGION}-docker.pkg.dev/${GOOGLE_PROJECT}/repo-container"
+    IMAGE_FOLDER: "${REGISTRY}/de/psi/log/idp/backstage"
+  services:
+    - docker:dind
+  before_script:
+    - echo "$GITLAB_TOKEN" > token.txt
+  script:
+    - *gcp_auth
+    - |
+      if [ "$CI_COMMIT_REF_NAME" == "$CI_DEFAULT_BRANCH" ]; then
+        dockerxOutputType="registry"
+        gcloud auth configure-docker ${REGION}-docker.pkg.dev --quiet
+      else
+        dockerxOutputType="cacheonly"
+      fi
+    - |
+      docker buildx build ./backstage \
+        --cache-from type=registry,ref=${IMAGE_FOLDER}:latest \
+        --cache-to type=inline \
+        --output type=${dockerxOutputType} \
+        --platform linux/amd64 \
+        --progress plain \
+        --tag "${IMAGE_FOLDER}:${TARGET_VERSION}" \
+        --tag "${IMAGE_FOLDER}:latest"
+
+bump-version:
+  image:
+    name: alpine/git:2.47.2
+    entrypoint:
+      - ""
+  stage: bump-version
+  dependencies:
+    - build-and-push-image
+  before_script:
+    - apk add --no-cache yq
+  script:
+    - bin/ci_prepare_git.sh
+    - yq -i ".version = \"${TARGET_VERSION}\"" deploy/backstage/Chart.yaml
+    - yq -i ".appVersion = \"${TARGET_VERSION}\"" deploy/backstage/Chart.yaml
+    - git add deploy/backstage/Chart.yaml
+    - git commit -m "config Bump versions [ci skip]" || echo "No changes to commit."
+    - git push "https://gitlab_bot_psi_se:${GITLAB_PUSH_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git" "HEAD:${CI_COMMIT_REF_NAME}"
+  only:
+    - main
+
+helm:
+  stage: helm
+  image:
+    name: alpine/helm:3.17.2
+    entrypoint: ["/bin/sh", "-c"]
+  dependencies:
+    - gcp-setup
+    - tf-plan-apply
+  id_tokens:
+    GITLAB_TOKEN:
+      aud: https://gitlab.com
+  before_script:
+    - echo "$GITLAB_TOKEN" > token.txt
+  script:
+    - *gcp_auth
+    - gcloud auth configure-docker ${REGION}-docker.pkg.dev --quiet
+    - gcloud container clusters get-credentials gke-cluster-main --region "$REGION" --project ${GOOGLE_PROJECT} || true
+
+    - helm repo add argo https://argoproj.github.io/argo-helm
+    - helm repo add sealed-secrets https://bitnami-labs.github.io/sealed-secrets
+    - helm repo add cnpg https://cloudnative-pg.github.io/charts
+    - helm repo update
+    - helm upgrade --install website ./website/helm --namespace idp --create-namespace
+    - helm upgrade --install argocd argo/argo-cd -n argocd --create-namespace --version 7.8.10 -f ./argocd/values.yaml
+    - helm upgrade --install sealed-secrets sealed-secrets/sealed-secrets -n sealed-secrets --create-namespace --version 2.17.1 -f ./sealed-secrets-values.yaml
+    - helm upgrade --install cnpg cnpg/cloudnative-pg -n cnpg-system --create-namespace --version 0.23.2
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+
+rollback:
+  stage: rollback
+  image:
+    name: alpine/git:2.47.2
+    entrypoint:
+      - ""
+  script:
+    - bin/ci_prepare_git.sh && bin/rollback.sh
+  only:
+    - main
+  when: on_failure

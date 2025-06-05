@@ -1,0 +1,4 @@
+unique_id: csf-incubator-ems-saso-ui
+description: ems-saso-ui
+merge_pipelines_enabled: true
+merge_trains_enabled: true

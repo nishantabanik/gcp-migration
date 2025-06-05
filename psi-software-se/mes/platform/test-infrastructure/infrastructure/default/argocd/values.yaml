@@ -1,0 +1,9 @@
+argocd:
+  dex:
+    enabled: false
+  global:
+    domain : ""
+  installCRDs: false
+  notifications:
+    enabled: false
+  

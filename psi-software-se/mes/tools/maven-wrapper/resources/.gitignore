@@ -1,0 +1,16 @@
+# Eclipse
+.classpath
+.factorypath
+.project
+.settings/
+
+# Intellij
+.idea/
+*.iml
+*.iws
+
+# Visual Studio Code
+.vscode/
+
+# Mac
+.DS_Store

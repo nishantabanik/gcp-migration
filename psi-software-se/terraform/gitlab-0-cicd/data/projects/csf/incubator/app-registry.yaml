@@ -1,0 +1,4 @@
+unique_id: csf-incubator-app-registry
+description: Micro-frontend remote apps register here to be available to the shell app
+merge_pipelines_enabled: true
+merge_trains_enabled: true

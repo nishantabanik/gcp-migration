@@ -1,0 +1,5 @@
+unique_id: SBOXLOGARCHPROJ1
+description: Team LOG Arch lab project
+access_groups:
+  organization/log/app-gcp-sbox-log-admins: developer
+  organization/log/app-gcp-sbox-log: reporter

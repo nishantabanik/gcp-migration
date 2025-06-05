@@ -1,0 +1,11 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: how-to-use-wms-server-config-template
+  description: Documentation for WMS Server Config Template
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+spec:
+  type: documentation
+  owner: user:guest
+  lifecycle: experimental

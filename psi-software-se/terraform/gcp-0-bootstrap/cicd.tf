@@ -1,0 +1,138 @@
+/**
+ * Copyright 2023-2024 Slalom GmbH
+ * Copyright 2022 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+# tfdoc:file:description Workload Identity Federation configurations for CI/CD.
+
+locals {
+  cicd_providers = {
+    for k, v in google_iam_workload_identity_pool_provider.default :
+    k => {
+      issuer           = local.identity_providers[k].issuer
+      issuer_uri       = local.identity_providers[k].issuer_uri
+      name             = v.name
+      principal_tpl    = local.identity_providers[k].principal_tpl
+      principalset_tpl = local.identity_providers[k].principalset_tpl
+    }
+  }
+  cicd_repositories = {
+    for k, v in coalesce(var.cicd_repositories, {}) : k => v
+    if(
+      v != null
+      &&
+      (
+        try(v.type, null) == "sourcerepo"
+        ||
+        contains(keys(local.identity_providers), coalesce(try(v.identity_provider, null), ":"))
+      )
+      &&
+      fileexists(format("${path.module}/templates/workflow-%s.yaml", try(v.type, "")))
+    )
+  }
+  cicd_workflow_providers = {
+    bootstrap = "0-bootstrap-providers.tf"
+    resman    = "1-resman-providers.tf"
+  }
+  cicd_workflow_var_files = {
+    bootstrap = [
+      # Slalom: terraform.tfvars from repo is used
+    ]
+    resman = [
+      "0-bootstrap.auto.tfvars.json",
+      "globals.auto.tfvars.json"
+    ]
+  }
+}
+
+# source repository
+
+module "automation-tf-cicd-repo" {
+  source = "git@gitlab.com:psi-software-se/terraform/modules.git//source-repository?ref=stable"
+  for_each = {
+    for k, v in local.cicd_repositories : k => v if v.type == "sourcerepo"
+  }
+  project_id = module.automation-project.project_id
+  name       = each.value.name
+  iam = {
+    "roles/source.admin" = [
+      each.key == "bootstrap"
+      ? module.automation-tf-bootstrap-sa.iam_email
+      : module.automation-tf-resman-sa.iam_email
+    ]
+    "roles/source.reader" = [
+      module.automation-tf-cicd-sa[each.key].iam_email
+    ]
+  }
+  # Slalom: Limit region
+  location = var.locations.trigger
+  triggers = {
+    # Slalom: fast with double O
+    "fast-0${each.key == "resman" ? "1" : "0"}-${each.key}" = {
+      filename = ".cloudbuild/workflow.yaml"
+      # Slalom: Include also TFVARS and YAML files from factories
+      included_files  = ["**/*tf", "**/*tfvars", "**/*yaml", ".cloudbuild/workflow.yaml"]
+      service_account = module.automation-tf-cicd-sa[each.key].id
+      substitutions   = {}
+      template = {
+        project_id  = null
+        branch_name = each.value.branch
+        repo_name   = each.value.name
+        tag_name    = null
+      }
+    }
+  }
+}
+
+# SAs used by CI/CD workflows to impersonate automation SAs
+
+module "automation-tf-cicd-sa" {
+  source       = "git@gitlab.com:psi-software-se/terraform/modules.git//iam-service-account?ref=stable"
+  for_each     = local.cicd_repositories
+  project_id   = module.automation-project.project_id
+  name         = "${each.key}-1"
+  display_name = "Terraform CI/CD ${each.key} service account."
+  prefix       = local.prefix
+  iam = (
+    each.value.type == "sourcerepo"
+    # used directly from the cloud build trigger for source repos
+    ? {}
+    # impersonated via workload identity federation for external repos
+    : {
+      "roles/iam.workloadIdentityUser" = [
+        each.value.branch == null
+        ? format(
+          local.identity_providers_defs[each.value.type].principalset_tpl,
+          google_iam_workload_identity_pool.default[0].name,
+          each.value.name
+        )
+        : format(
+          local.identity_providers_defs[each.value.type].principal_tpl,
+          google_iam_workload_identity_pool.default[0].name,
+          each.value.name,
+          each.value.branch
+        )
+      ]
+    }
+  )
+  iam_project_roles = {
+    (module.automation-project.project_id) = ["roles/logging.logWriter"]
+  }
+  iam_storage_roles = {
+    (module.automation-tf-output-gcs.name) = ["roles/storage.objectViewer"]
+    # Slalom: Bucket for build logs
+    (module.build-log-gcs.name) = ["roles/storage.admin"]
+  }
+}

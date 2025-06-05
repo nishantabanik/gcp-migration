@@ -1,0 +1,13 @@
+unique_id: csf-saso-gke-env
+description: saso-gke-env
+only_allow_merge_if_pipeline_succeeds: false
+merge_pipelines_enabled: false
+squash_commit_template: |
+  %{title}
+  
+  %{description}
+initialize_with_readme: false
+
+# push rules
+branch_name_regex: main|((feature|bugfix)\/[A-Z]+-\d+(?:[_-]\S+)?)
+commit_message_regex: ^(?:(Revert|Reapply) ")?(?:[A-Z]+-\d+ )+(?:[A-Z].+)(?:\n\n\S+(?:.|\n)+[\S])?

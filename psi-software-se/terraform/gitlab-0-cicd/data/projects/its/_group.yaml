@@ -1,0 +1,5 @@
+name: its
+description: Team ITS
+access_groups:
+  organization/its/app-gcp-sbox-its: developer
+  organization/its/app-gcp-sbox-its-admins: developer

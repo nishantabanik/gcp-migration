@@ -1,0 +1,46 @@
+# selected rules from
+# gcp-2-networking/data/dns-policy-rules.yaml
+
+# registries
+gcr:
+  dns_name: "gcr.io."
+  local_data: { CNAME: { rrdatas: ["private.googleapis.com."] } }
+gcr-all:
+  dns_name: "*.gcr.io."
+  local_data: { CNAME: { rrdatas: ["private.googleapis.com."] } }
+pkgdev:
+  dns_name: "pkg.dev."
+  local_data: { CNAME: { rrdatas: ["private.googleapis.com."] } }
+pkgdev-all:
+  dns_name: "*.pkg.dev."
+  local_data: { CNAME: { rrdatas: ["private.googleapis.com."] } }
+
+# All Google APIs
+googleapis-all:
+  dns_name: "*.googleapis.com."
+  local_data: { CNAME: { rrdatas: ["private.googleapis.com."] } }
+googleapis-private:
+  dns_name: "private.googleapis.com."
+  local_data:
+    A:
+      rrdatas:
+        - 199.36.153.8
+        - 199.36.153.9
+        - 199.36.153.10
+        - 199.36.153.11
+googleapis-restricted:
+  dns_name: "restricted.googleapis.com."
+  local_data:
+    A:
+      rrdatas:
+        - 199.36.153.4
+        - 199.36.153.5
+        - 199.36.153.6
+        - 199.36.153.7
+
+packages-cloud:
+  dns_name: "packages.cloud.google.com."
+  local_data: { CNAME: { rrdatas: ["private.googleapis.com."] } }
+packages-cloud-all:
+  dns_name: "*.packages.cloud.google.com."
+  local_data: { CNAME: { rrdatas: ["private.googleapis.com."] } }

@@ -1,0 +1,5 @@
+unique_id: IRVOZMUAPKVXREF0
+description: Project xref for Michael Bartmann (mbartmann@psi.de)
+access_groups:
+  organization/xref/app-gcp-sbox-xref-admins: developer
+  organization/xref/app-gcp-sbox-xref: reporter

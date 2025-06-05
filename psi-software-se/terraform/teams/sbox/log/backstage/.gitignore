@@ -1,0 +1,4 @@
+/backstage
+/log-idp*.tgz
+/.env
+/kubeconfig*.yaml

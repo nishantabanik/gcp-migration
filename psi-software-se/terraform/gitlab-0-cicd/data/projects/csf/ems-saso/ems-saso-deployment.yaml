@@ -1,0 +1,5 @@
+unique_id: csf-incubator-ems-saso-deployment
+description: ems-saso-deployment
+merge_pipelines_enabled: true
+merge_trains_enabled: true
+only_allow_merge_if_pipeline_succeeds: false

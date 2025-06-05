@@ -1,0 +1,11 @@
+unique_id: csf-incubator-k8s-ansible
+description: k8s-ansible
+merge_pipelines_enabled: true
+merge_trains_enabled: true
+
+protected_branches:
+  - name: main
+    push_access_level: maintainer
+    merge_access_level: developer
+    code_owner_approval_required: true
+    allow_force_push: true

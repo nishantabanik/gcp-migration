@@ -1,0 +1,5 @@
+name: csf
+description: CSF
+access_groups:
+  organization/csf/app-gcp-sbox-csf: developer
+  organization/csf/app-gcp-sbox-csf-admins: developer

@@ -1,0 +1,46 @@
+# Documentation of available options with default values
+# File name will be used as VM name
+
+# (Optional) Backup plan name to create automatic backups
+backup_plan: "vm-backup"
+
+# (Optional) Sets image and boot disk
+boot_disk:
+  # (Optional) Should boot disk be auto deleted when VM is deleted
+  auto_delete: true
+  # (Optional) Image to use for VM machine
+  # To list available images, run:
+  # gcloud compute images list
+  image: "family/debian-12"
+  # (Optional) Size in GB for boot disk
+  size: 10
+  # (Optional) Type of boot disk
+  # Disk types:
+  # pd-balanced, min 10 GB
+  # pd-standard, min 10 GB - HDD disk!
+  # pd-ssd, min 10 GB
+  # pd-extreme, min 500 GB
+  type: "pd-balanced"
+
+# (Optional) Turn on deletion protection for VM
+deletion_protection: false
+
+# Description, to which such value will be appended: (TF managed)
+description: "VM description"
+
+# (Optional) DNS sub domain which will be appended to project domain.
+# As a result, machine will be visible under host: vm-test.pjf.legacy.gcp.psi.de
+dns_name: "vm-test"
+
+# (Optional) Machine type (Memory, CPU)
+instance_type: "f1-micro"
+
+# (Optional) Service account name from data.tf to use
+service_account: "compute"
+
+# (Optional) Service accounts scopes, default: "cloud-platform"
+service_account_scopes: 
+  - "cloud-platform"
+
+# (Optional) Zone for VM machine, as default, value from terraform.tvars file is used
+zone: "europe-west3-a"

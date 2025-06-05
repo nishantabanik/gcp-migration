@@ -1,0 +1,7 @@
+name: Test Org Terraform IaC
+description: Test Org Terraform Infrastructure as Code (IaC)
+access_groups:
+  organization/app-gitlab-cft: maintainer
+  organization/app-gitlab-security: developer
+  organization/cft/app-gcp-cft: reporter
+  organization/its/app-gcp-sbox-its-admins: developer

@@ -1,0 +1,4 @@
+unique_id: mes-tools-maven-wrapper-resources
+description: This project contains resources to download and configure Maven Wrapper to be used on local machines as well as in build pipelines.
+merge_pipelines_enabled: true
+merge_trains_enabled: false

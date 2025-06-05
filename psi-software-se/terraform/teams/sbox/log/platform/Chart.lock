@@ -1,0 +1,9 @@
+dependencies:
+- name: crossplane
+  repository: https://charts.crossplane.io/stable/
+  version: 1.18.2
+- name: cloudnative-pg
+  repository: https://cloudnative-pg.github.io/charts/
+  version: 0.23.0
+digest: sha256:e44b56b1d37f90b5c043ecb1919a00286b6150dfd3ca2b6793e5b15e944e254d
+generated: "2025-01-08T11:56:15.271825+01:00"

@@ -1,0 +1,70 @@
+variables:
+  GOOGLE_PROJECT: psi-de-0-ibm-its-psimgmt-iac
+  SERVICE_ACCOUNT: sa-ibm-its-psimgmt-iac-1@psi-de-0-ibm-its-psimgmt-iac.iam.gserviceaccount.com
+  IMPERSONATE_SA: sa-ibm-its-psimgmt-iac-0@psi-de-0-ibm-its-psimgmt-iac.iam.gserviceaccount.com
+  GOOGLE_CREDENTIALS: cicd-sa-credentials.json
+  WIF_PROVIDER: projects/504787948326/locations/global/workloadIdentityPools/psi-de-0-bootstrap/providers/psi-de-0-bootstrap-git-psi
+  SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+  COMMAND: plan
+
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
+      variables:
+        COMMAND: apply -auto-approve
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      variables:
+        COMMAND: plan -lock=false
+    - if: $CI_PIPELINE_SOURCE == "push"
+      variables:
+        COMMAND: plan -lock=false
+
+stages:
+  - gcp-setup
+  - tf-plan-apply
+
+gcp-setup:
+  stage: gcp-setup
+  image:
+    name: google/cloud-sdk:slim
+  artifacts:
+    paths:
+      - $GOOGLE_CREDENTIALS
+  id_tokens:
+    GITLAB_TOKEN:
+      aud: https://gitlab.com
+  before_script:
+    - echo "$GITLAB_TOKEN" > token.txt
+  script:
+    - |
+      gcloud iam workload-identity-pools create-cred-config "${WIF_PROVIDER}" \
+        --service-account="${SERVICE_ACCOUNT}" \
+        --service-account-token-lifetime-seconds=1800 \
+        --output-file="${GOOGLE_CREDENTIALS}" \
+        --credential-source-file="token.txt"
+    - gcloud config set auth/credential_file_override "${GOOGLE_CREDENTIALS}"
+    - gcloud config set project "${GOOGLE_PROJECT}"
+
+tf-plan-apply:
+  stage: tf-plan-apply
+  dependencies:
+    - gcp-setup
+  image:
+    name: hashicorp/terraform
+    entrypoint:
+      - "/usr/bin/env"
+  id_tokens:
+    GITLAB_TOKEN:
+      aud: https://gitlab.com
+  before_script:
+    - echo "$GITLAB_TOKEN" > token.txt
+  script:
+    - |
+      ssh-agent -a $SSH_AUTH_SOCK
+      echo "$CICD_MODULES_KEY" | ssh-add -
+      mkdir -p ~/.ssh
+      ssh-keyscan -H 'gitlab.com' >> ~/.ssh/known_hosts
+      ssh-keyscan gitlab.com | sort -u - ~/.ssh/known_hosts -o ~/.ssh/known_hosts
+    - terraform init -backend-config="impersonate_service_account=$IMPERSONATE_SA"
+    - terraform validate
+    - terraform $COMMAND -input=false -no-color -var enable_impersonate_sa=true

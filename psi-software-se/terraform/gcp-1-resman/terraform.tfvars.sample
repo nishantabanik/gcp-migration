@@ -1,0 +1,130 @@
+# Slalom: Allow the Google Cloud Identity customer ID C01g7ajij and domain slalom.com
+#         The customer can authorize our Google accounts and we can help them quickly.
+organization_policy_configs = {
+  # This list constraint defines one or more Cloud Identity or Google Workspace customer IDs whose principals can be added to IAM policies.
+  # By default only own Cloud Identity customer ID (organization.customer_id) is allowed.
+  # Allow also Cloud Identity customer ID C01g7ajij (slalom.com)
+  # Set via organization policy iam.allowedPolicyMemberDomains.
+  allowed_policy_member_domains = ["C01g7ajij"]
+  # This list constraint defines the set of domains that email addresses added to Essential Contacts can have.
+  # By default only own Cloud Identity domain (organization.domain) is allowed.
+  # Allow also Cloud Identity domain slalom.com
+  # Set via organization policy essentialcontacts.allowedContactDomains.
+  # Note: Add domain with at (@) sign!
+  allowed_contact_domains = ["@slalom.com"]
+}
+
+# Slalom: Pokemon Go demo teams
+#  1. Create groups in Cloud Identity with script demo-groups.sh
+#  2. Replace 'gcp.example.com' with new domain name
+team_folders = {
+  # Team Instinct (Yellow)
+  # Note: Keep the key short!
+  team-y = {
+    descriptive_name = "Team Instinct"
+    group_iam = {
+      "gcp-team-instinct-admins@gcp.example.com" = [
+        "roles/viewer"
+      ]
+      "gcp-team-instinct@gcp.example.com" = [
+        "roles/viewer"
+      ]
+    }
+    impersonation_groups = ["gcp-team-instinct-admins@gcp.example.com"]
+  }
+  # Team Mystic (Blue)
+  # Note: Keep the key short!
+  team-b = {
+    descriptive_name = "Team Mystic"
+    group_iam = {
+      "gcp-team-mystic-admins@gcp.example.com" = [
+        "roles/viewer"
+      ]
+      "gcp-team-mystic@gcp.example.com" = [
+        "roles/viewer"
+      ]
+    }
+    impersonation_groups = ["gcp-team-mystic-admins@gcp.example.com"]
+  }
+  # Team Valor (Red)
+  # Note: Keep the key short!
+  team-r = {
+    descriptive_name = "Team Valor"
+    group_iam = {
+      "gcp-team-valor-admins@gcp.example.com" = [
+        "roles/viewer"
+      ]
+      "gcp-team-valor@gcp.example.com" = [
+        "roles/viewer"
+      ]
+    }
+    impersonation_groups = ["gcp-team-valor-admins@gcp.example.com"]
+  }
+}
+
+# Slalom: Configure CI/CD with GitHub
+cicd_repositories = {
+  security = {
+    branch            = "main"
+    identity_provider = "gh-sample"
+    name              = "my-gh-org/2-security"
+    type              = "github"
+  }
+  networking = {
+    branch            = "main"
+    identity_provider = "gh-sample"
+    name              = "my-gh-org/2-networking"
+    type              = "github"
+  }
+  project_factory_dev = {
+    branch            = "main"
+    identity_provider = "gh-sample"
+    name              = "my-gh-org/3-project-factory-dev"
+    type              = "github"
+  }
+  project_factory_prod = {
+    branch            = "main"
+    identity_provider = "gh-sample"
+    name              = "my-gh-org/3-project-factory-prod"
+    type              = "github"
+  }
+  # More:
+  # data_platform_dev
+  # data_platform_prod
+  # gke_dev
+  # gke_prod
+  # Please see: variables.tf
+}
+
+# Slalom: (Deprecated) Create repos in Google Cloud Source.
+/*
+cicd_repositories = {
+  security = {
+    branch            = "master"
+    identity_provider = "null"
+    name              = "fast/2-security"
+    type              = "sourcerepo"
+  }
+  networking = {
+    branch            = "master"
+    identity_provider = "null"
+    name              = "fast/2-networking"
+    type              = "sourcerepo"
+  }
+  project_factory_dev = {
+    branch            = "master"
+    identity_provider = "null"
+    name              = "fast/3-project-factory-dev"
+    type              = "sourcerepo"
+  }
+  project_factory_prod = {
+    branch            = "master"
+    identity_provider = "null"
+    name              = "fast/3-project-factory-prod"
+    type              = "sourcerepo"
+  }
+}
+*/
+
+# Slalom: Create local config. Do not change!
+outputs_location = "~/fast-config/"

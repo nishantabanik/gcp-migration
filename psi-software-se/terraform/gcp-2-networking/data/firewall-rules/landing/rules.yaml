@@ -1,0 +1,22 @@
+# skip boilerplate check
+
+ingress:
+  allow-iperf-onprem-probes:
+    description: "Allow iperf traffic from onprem probes to tag"
+    source_ranges:
+      - onprem_probes
+    targets: ["iperf"]
+    rules:
+      - protocol: tcp
+        ports:
+          - 5201
+  allow-iperf:
+    description: "Allow iperf traffic from and to tag"
+    sources:
+      - iperf
+    targets:
+      - iperf
+    rules:
+      - protocol: tcp
+        ports:
+          - 5201

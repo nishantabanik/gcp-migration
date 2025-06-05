@@ -1,0 +1,4 @@
+name: cf-tech
+description: CF-Tech team
+access_groups:
+  organization/leg-ibm/app-gcp-legacy-ibm-cf-tech-admin: developer

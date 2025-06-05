@@ -1,0 +1,7 @@
+unique_id: gcp-0-bootstrap
+description: FAST bootstrap.
+
+protected_branches:
+  - name: main
+    push_access_level: no one
+    merge_access_level: maintainer

@@ -1,0 +1,33 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: xservicehosts.idp.log.psi.de
+spec:
+  group: idp.log.psi.de
+  names:
+    plural: xservicehosts
+    singular: xservicehost
+    kind: XServiceHost
+  claimNames:
+    kind: ServiceHost
+    plural: servicehosts
+  versions:
+    - name: v1alpha1
+      served: true
+      referenceable: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                machineType:
+                  type: string
+                  description: The machine type of the vm. Like n1-standard-1
+                initScript:
+                  type: string
+                  description: Initialization script to be executed when instance starts.
+                enableSsh:
+                  type: boolean
+                  description: Allow connection via ssh

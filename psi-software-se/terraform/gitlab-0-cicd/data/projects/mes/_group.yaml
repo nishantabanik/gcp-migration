@@ -1,0 +1,5 @@
+name: mes
+description: MES
+access_groups:
+  organization/mes/app-gcp-sbox-mes: developer
+  organization/mes/app-gcp-sbox-mes-admins: developer

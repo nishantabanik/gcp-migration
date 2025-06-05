@@ -1,0 +1,5 @@
+name: log
+description: LOG
+access_groups:
+  organization/log/app-gcp-sbox-log: developer
+  organization/log/app-gcp-sbox-log-admins: developer

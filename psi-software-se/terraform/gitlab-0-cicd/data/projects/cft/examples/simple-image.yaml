@@ -1,0 +1,3 @@
+unique_id: app1
+description: "Example: build image on GitLab and deploy to GKE"
+approvals_required: 0

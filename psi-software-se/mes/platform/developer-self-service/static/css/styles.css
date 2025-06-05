@@ -1,0 +1,67 @@
+.header {
+    padding: 1rem 0;
+    margin: 10px 0 10px 0;
+}
+
+.header .psi-logo {
+    max-height: 50px;
+}
+
+.header h1 {
+    display: inline-block;
+    margin: 0 0 0 15px;
+    font-size: 1.5rem;
+    vertical-align: middle;
+}
+
+.card {
+    border: none;
+    background-color: #ffffff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+}
+
+.card-title {
+    color: #343a40;
+    font-size: 1.25rem;
+}
+
+.card-body {
+    padding: 2rem;
+}
+
+.btn-psi-blue {
+    background-color: #599FC6;
+    border:#006BA7;
+}
+
+.btn-psi-blue:hover {
+    background-color: #006BA7;
+}
+
+.btn-psi-grey {
+    background-color: #B9B9B9;
+    border:#919191;
+}
+
+.btn-psi-grey:hover {
+    background-color: #919191;
+}
+
+.btn-psi-red {
+    background-color: #AB5959;
+    border:#7E0000;
+}
+
+.btn-psi-red:hover {
+    background-color: #7E0000;
+}
+
+.card-deck .card {
+    min-width: 200px;
+}
